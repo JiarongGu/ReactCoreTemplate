@@ -56,11 +56,14 @@ namespace ReactCoreTemplate
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
+                spa.UseSpaPrerendering(options =>
                 {
-                    spa.UseReactDevelopmentServer(npmScript: "start");
-                }
+                    options.BootModulePath = $"{spa.Options.SourcePath}/build/server/bundle.js";
+                });
+                //if (env.IsDevelopment())
+                //{
+                //    spa.UseReactDevelopmentServer(npmScript: "start");
+                //}
             });
         }
     }

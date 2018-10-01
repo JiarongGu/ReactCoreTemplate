@@ -29,7 +29,7 @@ module.exports = {
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(appPublic, 'index.html'),
-            rremoveComments: false
+            minify: false
         }),
         new CopyWebpackPlugin([
             { from: `${appPublic}/favicon.ico`, to: appBuild, },

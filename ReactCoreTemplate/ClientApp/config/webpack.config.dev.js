@@ -40,7 +40,8 @@ module.exports = {
             DEBUG: false
         }),
         new HtmlWebpackPlugin({
-            template: path.resolve(appPublic, 'index.html')
+            template: path.resolve(appPublic, 'index.html'),
+            minify: false
         }),
         new CopyWebpackPlugin([
             { from: `${appPublic}/favicon.ico`, to: appBuild },

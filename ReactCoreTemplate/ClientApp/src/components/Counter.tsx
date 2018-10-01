@@ -1,7 +1,7 @@
-import React from 'react';
+import * as React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { actionCreators } from '../store/Counter';
+import { actionCreators } from '@store/Counter';
 
 const Counter = props => (
   <div>

@@ -1,17 +1,13 @@
-import { takeLatest, takeEvery, SagaIterator } from 'redux-saga';
+import { takeLatest, takeEvery } from 'redux-saga/effects';
 
-export const takeLatestWatcher = (action: string, saga : (...args: any[]) => SagaIterator): () => SagaIterator => {
+export const takeLatestWatcher = (action, saga) => {
   return function*() {
-    while (true) {
-      yield* takeLatest(action, saga);
-    }
+      yield takeLatest(action, saga);
   };
 };
 
-export const takeEveryWatcher = (action: string, saga: (...args: any[]) => SagaIterator): () => SagaIterator => {
+export const takeEveryWatcher = (action, saga)=> {
   return function*() {
-    while (true) {
-      yield* takeEvery(action, saga);
-    }
+      yield takeEvery(action, saga);
   };
 };

@@ -8,9 +8,12 @@ import { createMemoryHistory } from 'history';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 
 import { Routes } from './Routes';
-import { configureStore } from '@store';
+import { configureStore } from './store';
 import Helmet from 'react-helmet';
 import { AppInfoState } from '@store/appInfo';
+
+import * as https from 'https';
+
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {
@@ -18,11 +21,18 @@ export default createServerRenderer(params => {
     // corresponding to the incoming URL
     const basename = params.baseUrl.substring(0, params.baseUrl.length - 1); // Remove trailing slash
     const urlAfterBasename = params.url.substring(basename.length);
+    
+    // Server supplyData
+    const host = params.data.host;
+    const originalHtml = params.data.originalHtml;
 
-    const store = configureStore(createMemoryHistory(), { 
-      appInfo: new AppInfoState(false)
-    } as any);
-    const document = params.data.originalHtml;
+    // Parpare store
+    const httpsAgent = new https.Agent({ rejectUnauthorized: false });
+    const config = { baseURL: host, httpsAgent };
+    const pageInfo = { pathname: urlAfterBasename }
+    const initalState: any = { appInfo: new AppInfoState(false) };
+
+    const { store, initTask } = configureStore(createMemoryHistory(), initalState, pageInfo, config);
 
     store.dispatch(replace(urlAfterBasename));
 
@@ -43,23 +53,22 @@ export default createServerRenderer(params => {
       return;
     }
 
-    const head = Helmet.renderStatic();
-    const headTags =
-      `${head.title.toString()}\n` +
-      `${head.meta.toString()}\n` +
-      `${head.link.toString()}\n` +
-      `${head.script.toString()}\n` +
-      `${head.noscript.toString()}`;
-
     // Once any async tasks are done, we can perform the final render
     // We also send the redux store state, so the client can continue execution where the server left off
-    params.domainTasks.then(() => {
+    Promise.all([params.domainTasks, initTask]).then(() => {
+      // render headers
+      const head = Helmet.renderStatic();
+      const headTags =
+        `${head.title.toString()}\n` +
+        `${head.meta.toString()}\n` +
+        `${head.link.toString()}\n` +
+        `${head.script.toString()}\n` +
+        `${head.noscript.toString()}`;
+
       resolve({
-        html: document
+        html: originalHtml
           .replace('<!-- body -->', renderToString(app))
           .replace('<!-- head -->', headTags)
-          //.replace('<header-holder />', headTags)
-        //globals: { initialReduxState: store.getState() }
       });
     }, reject); // Also propagate any errors back into the host application
   });

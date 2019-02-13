@@ -1,45 +1,63 @@
-import { Store, createStore, applyMiddleware, combineReducers, AnyAction, Reducer } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import { routerMiddleware } from 'react-router-redux';
-import createSagaMiddleware from 'redux-saga';
 
-import { History } from 'history';
-import { logger } from './middleware';
-import { reducers, ApplicationState } from '@store/reducers';
+import { RouterState } from 'react-router-redux';
+import { generateConfigureStore } from '../utils';
+import { ApplicationState, reducers } from './reducers';
 import { rootSaga } from './sagas';
-import { routerReducer, RouterState } from 'react-router-redux';
-
-export { ApplicationState } from './reducers';
+import { AxiosRequestConfig } from 'axios';
+import { Store } from 'redux';
+import { HttpSources } from '../services/api';
+import { getDefualtAxiosConfig } from '../services/helpers';
+import createSagaMiddleware, { SagaMiddleware } from 'redux-saga';
+import { History } from 'history';
+import { locationMiddleware, locationMiddlewareHandler } from '../middlewares';
+import { httpSourceActions } from './httpsources';
 
 export interface RootState extends ApplicationState {
   routing: RouterState;
 }
 
-export function configureStore(history: History, initialState?: RootState): Store<RootState> {
-  const sagaMiddleware = createSagaMiddleware();
-  const connectedRouterMiddleware = routerMiddleware(history);
-
-  let middlewares = applyMiddleware(logger, sagaMiddleware, connectedRouterMiddleware);
-
-  if (process.env.NODE_ENV !== 'production') {
-    middlewares = composeWithDevTools(middlewares);
-  }
-
-  const combinedReducer = buildRootReducer(reducers);
-  const store = createStore(combinedReducer as any, initialState as any, middlewares) as Store<RootState>;
-  
-  sagaMiddleware.run(rootSaga)
-
-  if (module.hot) {
-    module.hot.accept('./reducers', () => {
-      const nextReducer = require('./reducers');
-      store.replaceReducer(nextReducer);
-    });
-  }
-
-  return store;
+export interface PageInfo {
+  pathname: string;
 }
 
-function buildRootReducer(allReducers): Reducer<RootState> {
-  return combineReducers<RootState>(Object.assign({}, allReducers, { routing: routerReducer }));
+// configure store with promise initalize task, so page can wait until initalize complete then render page
+export function configureStore(history: History, initialState: RootState, pageInfo: PageInfo, axiosConfig?: AxiosRequestConfig) {
+  // configure store
+  const sagaMiddleware = createSagaMiddleware();
+  const middlewares = [
+    locationMiddleware, sagaMiddleware
+  ];
+  const storeAction = generateStoreAction(sagaMiddleware, rootSaga);
+
+  // generate store
+  const store = generateConfigureStore<RootState>(reducers, storeAction, ...middlewares)(history, initialState);
+
+  // initalize store
+  const initTask = initalizeStore(store, pageInfo, axiosConfig);
+
+  return { store, initTask };
+}
+
+function generateStoreAction(sagaMiddleware: SagaMiddleware<{}>, rootSaga) {
+  return (store: Store<RootState>) => {
+    if (module.hot) {
+      module.hot.accept('./reducers', () => {
+        const nextReducer = require('./reducers');
+        store.replaceReducer(nextReducer);
+      });
+    }
+
+    sagaMiddleware.run(rootSaga);
+  }
+}
+
+// initalize store default state based on pathname
+function initalizeStore(store: Store<RootState>, pageInfo: PageInfo, axiosConfig?: AxiosRequestConfig) {
+  const httpSources = new HttpSources(getDefualtAxiosConfig('en', axiosConfig));
+  store.dispatch(httpSourceActions.setHttpSource(httpSources));
+  store.dispatch(httpSourceActions.setDefaultConfig(axiosConfig));
+
+  const locationPromise = locationMiddlewareHandler(store, { pathname: pageInfo.pathname });
+
+  return Promise.all([ locationPromise ]);
 }

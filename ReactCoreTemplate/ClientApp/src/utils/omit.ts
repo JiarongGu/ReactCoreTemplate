@@ -1,3 +1,5 @@
+import { Omit } from "react-redux";
+
 export function omit<T extends object, K extends keyof T>(target: T, ...omitKeys: K[]): Omit<T, K> {
   return (Object.keys(target) as K[]).reduce(
     (res, key) => {

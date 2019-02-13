@@ -13,6 +13,7 @@ to trigger a redux store update each time when the location change matches the c
 
 By using this way, the ServerRendering app can also get the data from api before it calls to the render string.
 
+
 ## Something about the utils
 The utils in the ClientApp is something I made just for convenience, which does something similar to redux-action,
 and some other redux related helpers

@@ -11,7 +11,6 @@ export function generateConfigureStore<TRootState>(reducers,
   ) {
   return function (history: History, initialState?: TRootState): Store<TRootState> {
     const connectedRouterMiddleware = routerMiddleware(history);
-    
     let middlewares = applyMiddleware(...customMiddlewares, connectedRouterMiddleware);
 
     if (process.env.NODE_ENV !== 'production') {

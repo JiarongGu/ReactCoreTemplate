@@ -50,7 +50,8 @@ namespace ReactCoreTemplate
             app.UseSpaStaticFiles();
 
             app.MapWhen(
-                context => context.Request.Path.StartsWithSegments("/api"),
+                context => 
+                    context.Request.Path.StartsWithSegments("/api"),
                 apiApp =>
                 {
                     apiApp.UseMvc(routes =>
@@ -67,7 +68,7 @@ namespace ReactCoreTemplate
                 spa.UseSpaPrerendering(options =>
                 {
                     options.BootModulePath = $"{spa.Options.SourcePath}/build/server/bundle.js";
-                    options.SupplyData = app.ApplicationServices.GetRequiredService<ISpaPrerenderingService>().Process;
+                    options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
                 });
             });
         }

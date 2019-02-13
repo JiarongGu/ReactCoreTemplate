@@ -1,8 +1,8 @@
-import { SampleDataSource } from './SampleDataSrouce';
+import { WeatherForecasts } from './WeatherForecastsSrouce';
 import Axios, { AxiosRequestConfig, CancelTokenSource } from 'axios';
 
 export class HttpSources {
-  sampleData: SampleDataSource;
+  watherForecasts: WeatherForecasts;
   cancelTokenSource: CancelTokenSource;
 
   constructor(axiosConfig?: AxiosRequestConfig) {
@@ -11,7 +11,7 @@ export class HttpSources {
     const defualtConfig = { cancelToken: this.cancelTokenSource.token };
     const config = axiosConfig ? Object.assign({}, axiosConfig, defualtConfig) : defualtConfig;
 
-    this.sampleData = new SampleDataSource(config);
+    this.watherForecasts = new WeatherForecasts(config);
   }
 
   cancelAll = () => {

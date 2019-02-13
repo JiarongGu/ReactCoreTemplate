@@ -1,6 +1,5 @@
-import { RootState } from '@store';
 import { MiddlewareAPI } from 'redux';
 
-export { SampleDataHandler } from './SampleDataHandler';
+export { WatherForecastDataHandler } from './WatherForecastDataHandler';
 
-export type LocationMiddlewareHandler = (store: MiddlewareAPI<RootState>, payload: any) => Promise<any>;
+export type LocationMiddlewareHandler = (store: MiddlewareAPI<any>, payload: any) => Promise<any>;

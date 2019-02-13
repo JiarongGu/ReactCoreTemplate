@@ -1,8 +1,7 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { RootState } from '../../store';
 import * as Handlers from './handlers';
 
-export const locationMiddleware: any = (store: MiddlewareAPI<RootState>) => (next: Dispatch<RootState>) => (action: AnyAction) => {
+export const locationMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispatch<any>) => (action: AnyAction) => {
   if (action.type == '@@router/LOCATION_CHANGE') {
     locationMiddlewareHandler(store, action.payload);
   }

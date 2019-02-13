@@ -1,4 +1,4 @@
-import { createRedux, createReducer } from '../../utils';
+import { createReducer, combineReducers } from '../../utils';
 
 export class AppInfoState {
   logoUrl: string;
@@ -10,7 +10,7 @@ export class AppInfoState {
   }
 }
 
-const setAppInfo = createRedux<AppInfoState, AppInfoState>((state, appInfo) => ({ ...state, appInfo }));
+const setAppInfo = createReducer<AppInfoState, AppInfoState>((state, appInfo) => ({ ...state, appInfo }));
 
-export const appInfoReducer = createReducer( new AppInfoState(), setAppInfo );
-export const appInfoActions = { setAppInfo: setAppInfo.action }
+export const appInfoReducer = combineReducers( new AppInfoState(), setAppInfo );
+export const appInfoActions = { setAppInfo: setAppInfo.action };

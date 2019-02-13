@@ -1,10 +1,10 @@
-import { createRedux, createReducer } from '../../utils';
+import { createReducer, combineReducers } from '../../utils';
 
 export class WatherForecastState {
   forecasts: any[];
 }
 
-const setForecasts = createRedux<WatherForecastState, any[]>((state, forecasts) => ({ ...state, forecasts }));
+const setForecasts = createReducer<WatherForecastState, any[]>((state, forecasts) => ({ ...state, forecasts }));
 
-export const watherForecastReducer = createReducer( new WatherForecastState(), setForecasts );
+export const watherForecastReducer = combineReducers( new WatherForecastState(), setForecasts );
 export const watherForecastActions = { setForcasts: setForecasts.action };

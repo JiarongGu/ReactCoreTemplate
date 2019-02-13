@@ -1,83 +1,115 @@
-import { createAction, Reducer, Action, handleActions, ActionFunctionAny } from "redux-actions";
-import { takeEveryWatcher, takeLatestWatcher } from './';
+import { takeLatest, takeEvery, all, fork } from 'redux-saga/effects';
 import { SagaIterator } from 'redux-saga';
 import { ForkEffect } from 'redux-saga/effects';
-import * as uuidv4 from 'uuid/v4';
+import * as uuid from 'uuid';
+
+export interface Action<Payload> {
+  type: string;
+  payload?: Payload;
+  error?: boolean;
+}
+export type Reducer<TState, TPayload> = (state: TState, action: Action<TPayload>) => TState;
+export type ActionFunction0Base<R> = () => R;
+export type ActionFunction1Base<T1, R> = (t1: T1) => R;
+export type ActionFunction2Base<T1, T2, R> = (t1: T1, t2: T2) => R;
+export type ActionFunction3Base<T1, T2, T3, R> = (t1: T1, t2: T2, t3: T3) => R;
+export type ActionFunction4Base<T1, T2, T3, T4, R> = (t1: T1, t2: T2, t3: T3, t4: T4) => R;
+
+export type ActionFunction1<T1> = ActionFunction1Base<T1, Action<T1>>;
+export type ActionFunctionAny<R> = (...args: any[]) => R;
 
 export enum SagaWatherType {
   Every,
   Lastest
 }
 
-export interface ReduxEventParameters<TState, TPayload> {
+export interface IReducerEventParameters<TState, TPayload> {
   name?: string;
   action?: ActionFunctionAny<TPayload>;
   reducer: Reducer<TState, any>;
 }
 
-export interface ReduxEvent<TState, TPayload> {
-  name: string;
+export interface IReducerEvent<TState, TPayload> {
   action: ActionFunctionAny<Action<TPayload>>;
   reducer: Reducer<TState, TPayload>;
 }
 
-export interface SagaEventParameters<TPayload> {
+export interface ISagaEventParameters<TPayload> {
   name?: string;
   action?: ActionFunctionAny<TPayload>;
   saga: (action: Action<TPayload>) => SagaIterator;
-  type?: SagaWatherType
+  type?: SagaWatherType;
 }
 
-export interface SagaEvent<TPayload> {
+export interface ISagaEvent<TPayload> {
   action: ActionFunctionAny<Action<TPayload>>;
   watcher: () => IterableIterator<ForkEffect>;
 }
 
 type ReducerHandler<TState, TPayload> = (state, payload?: TPayload) => TState;
 
-export function createRedux<TState, TPayload>(handler: ReducerHandler<TState, TPayload>): ReduxEvent<TState, TPayload> {
+export function createReducer<TState, TPayload>(
+  handler: ReducerHandler<TState, TPayload>
+): IReducerEvent<TState, TPayload> {
   const reducer = ((state, { payload }) => handler(state, payload)) as Reducer<TState, TPayload>;
-  return createComplexRedux<TState, TPayload>({ reducer });
+  return createComplexReducer<TState, TPayload>({ reducer });
 }
 
-export function createComplexRedux<TState, TPayload>(event: ReduxEventParameters<TState, TPayload>): ReduxEvent<TState, TPayload> {
-  const name = event.name || uuidv4();
+export function createComplexReducer<TState, TPayload>(
+  event: IReducerEventParameters<TState, TPayload>
+): IReducerEvent<TState, TPayload> {
+  const name = event.name || uuid.v4();
   const action = event.action || ((payload: TPayload) => payload);
-  const createdAction = createAction(name, action);
+  
+  const createdAction = function(payload) {
+    return ({type: name, payload: action(payload)})
+  };
+
+  createdAction.toString = () => name;
+
   const createdReducer = event.reducer;
 
   return {
-    name: name,
-    action: createdAction,
+    action: createdAction as ActionFunction1<TPayload>,
     reducer: createdReducer
+  };
+}
+
+export function combineReducers<TState>(
+  defaultState: TState,
+  ...events: Array<IReducerEvent<TState, any>>
+): Reducer<TState, any> {
+  const actions = events.reduce((root, next) => {
+    return Object.assign(root, { [next.action.toString()]: next.reducer });
+  }, {});
+
+  return (state, action) => {
+    if(!actions[action.type]) 
+      return state || defaultState;
+
+    return actions[action.type](state, action)
   }
 }
 
-export function createReducer<TState>(defualtState: TState, ...events: ReduxEvent<TState, any>[]): Reducer<TState, any> {
-  const actions = events.reduce((root, next) => {
-    return Object.assign(root, { [next.name]: next.reducer })
-  }, {});
-
-  return handleActions<TState>(
-    actions,
-    defualtState
-  );
+export function combineSagaWachers(...events: Array<ISagaEvent<any>>) {
+  return events.map((event) => event.watcher);
 }
 
-export function createSagaWatcher(...events: SagaEvent<any>[]) {
-  return events.map(event => event.watcher);
-}
-
-export function createSaga<TPayload>(saga: (action: Action<TPayload>) => SagaIterator, type?: SagaWatherType): SagaEvent<TPayload> {
+export function createSaga<TPayload>(
+  saga: (action: Action<TPayload>) => SagaIterator,
+  type?: SagaWatherType
+): ISagaEvent<TPayload> {
   return createComplexSaga({ saga, type });
 }
 
-export function createComplexSaga<TPayload>(event: SagaEventParameters<TPayload>): SagaEvent<TPayload> {
-  const name = event.name || uuidv4();
+export function createComplexSaga<TPayload>(
+  event: ISagaEventParameters<TPayload>
+): ISagaEvent<TPayload> {
+  const name = event.name || uuid.v4();
   const action = event.action || ((payload: TPayload) => payload);
+  const createdAction = (payload) => ({ type: name, payload: action(payload)});
 
-  const createdAction = createAction(name, action);
-  let createdWatcher: () => IterableIterator<ForkEffect> = function* () { };
+  let createdWatcher: () => IterableIterator<ForkEffect>;
 
   if (event.type === SagaWatherType.Every) {
     createdWatcher = takeEveryWatcher(name, event.saga);
@@ -89,4 +121,27 @@ export function createComplexSaga<TPayload>(event: SagaEventParameters<TPayload>
     action: createdAction,
     watcher: createdWatcher
   };
+}
+
+export const takeLatestWatcher = (action, saga) => {
+  return function*() {
+      yield takeLatest(action, saga);
+  };
+};
+
+export const takeEveryWatcher = (action, saga)=> {
+  return function*() {
+      yield takeEvery(action, saga);
+  };
+};
+
+
+export const createRootSaga = (...watchers) => {
+  const flentedWatchers = watchers.reduce((root, next) => {
+    return root.concat(next);
+  }, []);
+
+  return function* rootSaga() {
+    yield all(flentedWatchers.map(fork));
+  }  
 }

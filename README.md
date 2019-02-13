@@ -2,6 +2,8 @@
 Example for .net core, React + Redux + Typescript + Server Rendering, hope this can help someone who is seeking for .net core + react
 
 ## Getting Started
+This project is using .net core 2.2, please ensure you have the right sdk https://dotnet.microsoft.com/download/dotnet-core/2.2
+
 Run the complie in ClientApp before you start the .net core webapp
 ```
 npm run build:all

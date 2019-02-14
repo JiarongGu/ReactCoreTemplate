@@ -1,6 +1,6 @@
-import { createReducer, LocationMiddlewareHandler } from '../utils';
 import { matchPath } from 'react-router';
 import { ApplicationState } from '@store/reducers';
+import { createReducer, LocationMiddlewareHandler } from '@utils';
 
 export class WatherForecastState {
   forecasts: any[];

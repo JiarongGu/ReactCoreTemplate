@@ -4,11 +4,11 @@ import { connect } from 'react-redux';
 import { WatherForecastState, setForecasts, forecastHandler } from './watherForecastServices';
 import { registerReducers, registerLocationHandler } from '@utils';
 
-registerReducers<WatherForecastState>({ 
-  stateName: 'watherForecast', 
-  initalState: new WatherForecastState(), 
-  reducerEvents: [ setForecasts ]}
-);
+registerReducers<WatherForecastState>({
+  stateName: 'watherForecast',
+  initalState: new WatherForecastState(),
+  reducerEvents: [setForecasts]
+});
 
 registerLocationHandler(forecastHandler);
 
@@ -26,7 +26,7 @@ export class WeatherForecast extends React.Component<any> {
       <div>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {forecasts && 
+        {forecasts &&
           <table className='table'>
             <thead>
               <tr>

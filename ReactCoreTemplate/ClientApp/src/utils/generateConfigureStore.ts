@@ -4,6 +4,8 @@ import { routerMiddleware } from 'react-router-redux';
 
 import { History } from 'history';
 import { routerReducer } from 'react-router-redux';
+import { buildRootReducer } from '.';
+import { registerStore } from './redux-creators';
 
 export function generateConfigureStore<TRootState>(reducers, 
     customActions?: (store: Store<TRootState>) => void,
@@ -17,14 +19,10 @@ export function generateConfigureStore<TRootState>(reducers,
       middlewares = composeWithDevTools(middlewares);
     }
 
-    const combinedReducer = buildRootReducer<TRootState>(reducers);
+    const combinedReducer = buildRootReducer<TRootState>({ ...reducers, routing: routerReducer });
     const store = createStore(combinedReducer as any, initialState as any, middlewares) as Store<TRootState>;
-
+    registerStore(store);
     customActions && customActions(store);
     return store;
   }
-}
-
-function buildRootReducer<TRootState>(reducers): Reducer<TRootState> {
-  return combineReducers<TRootState>(Object.assign({}, reducers, { routing: routerReducer }));
 }

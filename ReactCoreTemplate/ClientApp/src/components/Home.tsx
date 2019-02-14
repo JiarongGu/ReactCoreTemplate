@@ -6,6 +6,6 @@ export const Home = props => (
     <h1>Hello, world!</h1>
     <p>Welcome to your new single-page application, built with: .net core</p>
     <p><Link to={'counter'}>Go Counter</Link></p>
-    <p><Link to={'fetchData'}>Go Fetch Data</Link></p>
+    <p><Link to={'weather-forecast'}>Go Fetch Data</Link></p>
   </div>
 );

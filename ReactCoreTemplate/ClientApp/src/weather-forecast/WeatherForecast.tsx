@@ -1,9 +1,23 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { ApplicationState } from '@store/reducers';
+import { connect } from 'react-redux';
+import { WatherForecastState, setForecasts, forecastHandler } from './watherForecastServices';
+import { registerReducers, registerLocationHandler } from '@utils';
 
-class FetchData extends React.Component<any> {
+registerReducers<WatherForecastState>({ 
+  stateName: 'watherForecast', 
+  initalState: new WatherForecastState(), 
+  reducerEvents: [ setForecasts ]}
+);
+
+registerLocationHandler(forecastHandler);
+
+@connect(
+  (state: { watherForecast: WatherForecastState }) => (
+    { forecasts: state.watherForecast.forecasts }
+  )
+)
+export class WeatherForecast extends React.Component<any> {
   render() {
     const { forecasts, match: { params: { startDateIndex } } } = this.props;
     const prevStartDateIndex = parseInt(startDateIndex || 0) - 5;
@@ -35,14 +49,10 @@ class FetchData extends React.Component<any> {
           </table>
         }
         <p className='clearfix text-center'>
-          <p><Link to={`/fetchdata/${prevStartDateIndex}`}>Previous</Link></p>
-          <p><Link to={`/fetchdata/${nextStartDateIndex}`}>Next</Link></p>
+          <p><Link to={`/weather-forecast/${prevStartDateIndex}`}>Previous</Link></p>
+          <p><Link to={`/weather-forecast/${nextStartDateIndex}`}>Next</Link></p>
         </p>
       </div>
     );
   }
 }
-
-export default connect(
-  (state: ApplicationState) => ({ forecasts: state.watherForecast.forecasts })
-)(FetchData);

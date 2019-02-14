@@ -1,4 +1,4 @@
-import { createReducer, combineReducers } from '../../utils';
+import { createReducer, combineReducerEvents } from '../../utils';
 
 export class AppInfoState {
   logoUrl: string;
@@ -12,5 +12,5 @@ export class AppInfoState {
 
 const setAppInfo = createReducer<AppInfoState, AppInfoState>((state, appInfo) => ({ ...state, appInfo }));
 
-export const appInfoReducer = combineReducers( new AppInfoState(), setAppInfo );
+export const appInfoReducer = combineReducerEvents( new AppInfoState(), setAppInfo );
 export const appInfoActions = { setAppInfo: setAppInfo.action };

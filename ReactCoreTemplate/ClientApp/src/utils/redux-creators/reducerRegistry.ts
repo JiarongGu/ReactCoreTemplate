@@ -5,11 +5,12 @@ let staticStore: Redux.Store;
 let staticReducers;
 
 export function replaceReducer(name, reducer) {
-  if(!reducerCollection[name])
+  if(!reducerCollection[name]) {
     reducerCollection[name] = reducer;
     
-  if (staticStore)
-    staticStore.replaceReducer(buildReducer())
+    if (staticStore)
+      staticStore.replaceReducer(buildReducer())
+  }
 }
 
 export function registerStore(store: Redux.Store){

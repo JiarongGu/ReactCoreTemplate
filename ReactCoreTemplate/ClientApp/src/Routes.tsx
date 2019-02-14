@@ -1,7 +1,7 @@
 ﻿import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { Home } from './components/Home';
-import Counter from './components/Counter';
+import { Counter } from './components/Counter';
 import { WeatherForecast } from './components/WeatherForecast';
 
 export const Routes = () => (

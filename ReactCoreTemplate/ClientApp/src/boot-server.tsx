@@ -3,17 +3,16 @@ import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
-import { createMemoryHistory } from 'history';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 
 import { Routes } from './Routes';
 import Helmet from 'react-helmet';
-import { AppInfoState } from '@store/appInfo';
 
 import * as https from 'https';
 import { configureStore } from './utils';
-import { initalizeStore } from './store';
-import { ApplicationState, reducers } from '@store/reducers';
+import { initalizeStore, ApplicationState } from './store';
+import './services';
+import { AppInfoState } from './services';
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {
@@ -32,7 +31,7 @@ export default createServerRenderer(params => {
     const pageInfo = { pathname: urlAfterBasename }
     const initalState: any = { appInfo: new AppInfoState(false)};
 
-    const store = configureStore<ApplicationState>(reducers, initalState);
+    const store = configureStore<ApplicationState>(undefined, initalState);
 
     // Prepare an instance of the application and perform an inital render that will
     // cause any async tasks (e.g., data access) to begin
@@ -63,7 +62,9 @@ export default createServerRenderer(params => {
         `${head.script.toString()}\n` +
         `${head.noscript.toString()}`;
       const state = store.getState();
-      delete(state.httpSources);
+      
+      // delete httpconfig which be using differently in client
+      delete(state.httpConfig);
 
       resolve({
         html: originalHtml

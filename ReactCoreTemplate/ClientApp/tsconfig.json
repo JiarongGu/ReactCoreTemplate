@@ -20,10 +20,10 @@
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
     "paths": {
-      "@shared/*": ["./src/shared/*"],
-      "@store/*": ["./src/store/*"],
+      "@shared*": ["./src/shared*"],
+      "@store*": ["./src/store*"],
       "@store": ["./src/store"],
-      "@utils/*": ["./src/utils/*"],
+      "@utils*": ["./src/utils*"],
       "@utils": ["./src/utils"]
     }
   },

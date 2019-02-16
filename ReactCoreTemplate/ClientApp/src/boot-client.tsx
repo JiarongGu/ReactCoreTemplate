@@ -3,10 +3,10 @@ import * as ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { PageInfo } from '@store';
 import { Routes } from './Routes';
 import { ConnectedRouter, configureStore } from './utils';
-import { reducers, ApplicationState } from '@store/reducers';
+import { ApplicationState } from './store';
+import './services';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }
@@ -20,7 +20,7 @@ delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-const store = configureStore<ApplicationState>(reducers, preloadedState);
+const store = configureStore<ApplicationState>(undefined, preloadedState);
 
 export const App = hot(module)(() => (
   <Routes />

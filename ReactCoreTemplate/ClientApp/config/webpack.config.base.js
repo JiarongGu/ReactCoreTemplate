@@ -20,7 +20,8 @@ const resolveAlias = {
     '@shared': resolveSource('shared'),
     '@styles': resolveSource('styles'),
     '@utils': resolveSource('utils'),
-    '@store': resolveSource('store')
+    '@store': resolveSource('store'),
+    '@components': resolveSource('components')
 }
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
     output: {
         path: outPath,
         filename: 'bundle.js',
-        chunkFilename: '[name].bundle.js',
+        chunkFilename: '[name].[hash].bundle.js',
         publicPath: '/'
     },
     target: 'web',

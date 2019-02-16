@@ -1,4 +1,5 @@
 var path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     target: 'node',
@@ -10,5 +11,10 @@ module.exports = {
         filename: 'bundle.js',
         libraryTarget: 'commonjs',
         path: path.resolve(__dirname, '../build/server')
-    }
+    },
+    plugins: [
+        new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1,
+        })
+    ]
 };

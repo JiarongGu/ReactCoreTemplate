@@ -30,7 +30,7 @@ export const App = hot(module)(() => (
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={history} store={store}>
-      <App />
+        <App />
     </ConnectedRouter>
   </Provider>,
   document.getElementById('root')

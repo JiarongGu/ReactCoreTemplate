@@ -3,28 +3,35 @@ import * as ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { configureStore, PageInfo } from '@store';
+import { PageInfo } from '@store';
 import { Routes } from './Routes';
-import { ConnectedRouter } from 'react-router-redux';
+import { ConnectedRouter, configureStore } from './utils';
+import { reducers, ApplicationState } from '@store/reducers';
+
+declare global {
+  interface Window { __PRELOADED_STATE__: any; }
+}
+
+// Grab the state from a global variable injected into the server-generated HTML
+const preloadedState = window.__PRELOADED_STATE__;
+
+// Allow the passed state to be garbage-collected
+delete window.__PRELOADED_STATE__;
 
 // prepare store
-const pageInfo: PageInfo = { pathname: document.location ? document.location.pathname : '' }
 const history = createBrowserHistory();
-const initalState: any = {};
-const { store, initTask } = configureStore(history, initalState, pageInfo);
+const store = configureStore<ApplicationState>(reducers, preloadedState);
 
 export const App = hot(module)(() => (
   <Routes />
 ));
 
 // initalize default state with requests, then render dom
-initTask.then(() => {
-  ReactDOM.render(
-    <Provider store={store}>
-      <ConnectedRouter history={history} store={store}>
-        <App />
-      </ConnectedRouter>
-    </Provider>,
-    document.getElementById('root')
-  );
-})
+ReactDOM.render(
+  <Provider store={store}>
+    <ConnectedRouter history={history} store={store}>
+      <App />
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root')
+);

@@ -8,6 +8,7 @@ export interface ReducerRegistration<TState> {
 }
 
 export function registerReducers<TState>(registration: ReducerRegistration<TState>) {
+  console.log('new state::', registration.stateName);
   var combinedReducer = combineReducerEvents(registration.initalState, ...registration.reducerEvents);
   replaceReducer(registration.stateName, combinedReducer);
 }

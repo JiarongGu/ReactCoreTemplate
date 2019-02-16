@@ -1,16 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { WatherForecastState, setForecasts, forecastHandler } from './watherForecastServices';
-import { registerReducers, registerLocationHandler } from '@utils';
-
-registerReducers<WatherForecastState>({
-  stateName: 'watherForecast',
-  initalState: new WatherForecastState(),
-  reducerEvents: [setForecasts]
-});
-
-registerLocationHandler(forecastHandler);
+import { WatherForecastState } from './watherForecastServices';
 
 @connect(
   (state: { watherForecast: WatherForecastState }) => (
@@ -48,10 +39,8 @@ export class WeatherForecast extends React.Component<any> {
             </tbody>
           </table>
         }
-        <p className='clearfix text-center'>
-          <p><Link to={`/weather-forecast/${prevStartDateIndex}`}>Previous</Link></p>
-          <p><Link to={`/weather-forecast/${nextStartDateIndex}`}>Next</Link></p>
-        </p>
+        <p><Link to={`/weather-forecast/${prevStartDateIndex}`}>Previous</Link></p>
+        <p><Link to={`/weather-forecast/${nextStartDateIndex}`}>Next</Link></p>
       </div>
     );
   }

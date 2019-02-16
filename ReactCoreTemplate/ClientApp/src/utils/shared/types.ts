@@ -21,5 +21,3 @@ export type ActionFunction4Base<T1, T2, T3, T4, R> = (t1: T1, t2: T2, t3: T3, t4
 
 export type ActionFunction1<T1> = ActionFunction1Base<T1, Action<T1>>;
 export type ActionFunctionAny<R> = (...args: any[]) => R;
-
-export type LocationMiddlewareHandler = (store: MiddlewareAPI<any>, payload: any) => Promise<any>;

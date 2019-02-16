@@ -13,7 +13,7 @@ export interface IReducerEvent<TState, TPayload> {
 
 export type ReducerHandler<TState, TPayload> = (state, payload?: TPayload) => TState;
 
-export { combineReducerEvents } from './combineReducerEvents';
-export { createReducer, createComplexReducer } from './createReducer';
-export { buildRootReducer, registerStore } from './reducerRegistry';
-export { registerReducers } from './registerReducers';
+export * from './combineReducerEvents';
+export * from './createReducer';
+export * from './reducerRegistry';
+export * from './registerReducers';

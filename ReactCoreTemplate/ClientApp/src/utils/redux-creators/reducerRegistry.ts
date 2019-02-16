@@ -17,11 +17,17 @@ export function registerStore(store: Redux.Store){
   staticStore = store;
 }
 
+export function getCurrentStore() {
+  return staticStore;
+}
+
 export function buildRootReducer<TRootState>(reducers): Redux.Reducer<TRootState> {
+  console.log('build store...');
   staticReducers = reducers;
   return buildReducer();
 }
 
 function buildReducer<TRootState>(): Redux.Reducer<TRootState> {
-  return Redux.combineReducers<TRootState>(Object.assign({},{ ...reducerCollection,  ... staticReducers }));
+  const reducers = Object.assign({},{ ...reducerCollection,  ...staticReducers });
+  return Redux.combineReducers<TRootState>(reducers);
 }

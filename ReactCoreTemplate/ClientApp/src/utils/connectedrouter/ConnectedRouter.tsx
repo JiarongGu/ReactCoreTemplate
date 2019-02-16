@@ -4,7 +4,7 @@ import { Router } from 'react-router';
 import { History, UnregisterCallback } from 'history';
 
 export class ConnectedRouter extends React.Component<{history: History, store: Store<any>}> {
-  unRegisterListener: UnregisterCallback;
+  unregisterListener?: UnregisterCallback;
 
   onLocationChange = (location) => {
     this.props.store.dispatch({ 
@@ -14,12 +14,14 @@ export class ConnectedRouter extends React.Component<{history: History, store: S
   }
 
   componentWillMount() {
-    this.onLocationChange(this.props.history.location);
-    this.unRegisterListener = this.props.history.listen(this.onLocationChange);
+    if(this.props.store.getState().appInfo.isClient)
+      this.onLocationChange(this.props.history.location);
+    this.unregisterListener = this.props.history.listen(this.onLocationChange);
   }
 
   componentWillUnmount() {
-    this.unRegisterListener();
+    if (this.unregisterListener)
+      this.unregisterListener();
   }
 
   render() {

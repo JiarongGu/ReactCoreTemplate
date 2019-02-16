@@ -1,5 +1,4 @@
 import { createReducer, combineReducerEvents } from '../../utils';
-import { ActionFunction1, Action } from 'redux-actions';
 import { HttpSources } from '../../services/api';
 import { AxiosRequestConfig } from 'axios';
 
@@ -13,6 +12,6 @@ const setDefaultConfig = createReducer<HttpSourcesState, AxiosRequestConfig | un
 export const httpSourceReducer = combineReducerEvents(new HttpSources(), setHttpSource, setDefaultConfig);
 
 export const httpSourceActions = {
-  setHttpSource: setHttpSource.action as ActionFunction1<HttpSources, Action<HttpSources>>,
-  setDefaultConfig: setDefaultConfig.action as ActionFunction1<AxiosRequestConfig | undefined, Action<AxiosRequestConfig | undefined>>
+  setHttpSource: setHttpSource.action,
+  setDefaultConfig: setDefaultConfig.action
 }

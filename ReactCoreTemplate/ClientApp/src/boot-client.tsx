@@ -29,7 +29,7 @@ export const App = hot(module)(() => (
 // initalize default state with requests, then render dom
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history} store={store}>
+    <ConnectedRouter history={history} store={store} hasState={!!preloadedState} >
         <App />
     </ConnectedRouter>
   </Provider>,

@@ -1,4 +1,4 @@
-import { createReducer, registerReducers } from '@utils';
+import { createReducer, ReduxRegistry } from '@utils';
 
 export class AppInfoState {
   logoUrl: string;
@@ -14,7 +14,7 @@ const setAppInfo = createReducer<AppInfoState, AppInfoState>((state, appInfo) =>
 
 export const appInfoActions = { setAppInfo: setAppInfo.action };
 
-registerReducers({
+ReduxRegistry.registerReducer({
   stateName: 'appInfo',
   initalState: new AppInfoState(),
   reducerEvents: [setAppInfo]

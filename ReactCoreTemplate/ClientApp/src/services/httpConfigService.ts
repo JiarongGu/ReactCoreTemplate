@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { createReducer, registerReducers } from '@utils';
+import { createReducer, ReduxRegistry } from '@utils';
 
 export class HttpConfigState {
   config?: AxiosRequestConfig
@@ -7,7 +7,7 @@ export class HttpConfigState {
 
 const setHttpConfig = createReducer<HttpConfigState, AxiosRequestConfig | undefined>((state, config) => ({ ...state, config }));
 
-registerReducers({
+ReduxRegistry.registerReducer({
   stateName: 'httpConfig',
   initalState: new HttpConfigState(),
   reducerEvents: [setHttpConfig]

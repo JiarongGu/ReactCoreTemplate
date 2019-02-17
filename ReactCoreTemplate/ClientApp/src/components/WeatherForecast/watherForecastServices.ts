@@ -1,5 +1,5 @@
 import { matchPath } from 'react-router';
-import { createReducer, registerLocationHandler, createPromiseHandler, registerReducers } from '@utils';
+import { createReducer, createPromiseHandler, ReduxRegistry } from '@utils';
 import { WeatherForecastSource } from './WatherForecastSource';
 import { ApplicationState } from '@store';
 
@@ -22,10 +22,10 @@ export const forecastHandler = createPromiseHandler<Location>(async (store, payl
   }
 });
 
-registerReducers<WatherForecastState>({
-  stateName: 'watherForecast',
-  initalState: new WatherForecastState(),
-  reducerEvents: [setForecasts]
-});
-
-registerLocationHandler(forecastHandler);
+ReduxRegistry
+  .registerReducer<WatherForecastState>({
+    stateName: 'watherForecast',
+    initalState: new WatherForecastState(),
+    reducerEvents: [setForecasts]
+  })
+  .registerLocationHandler(forecastHandler);

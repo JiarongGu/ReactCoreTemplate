@@ -13,6 +13,7 @@ export class WeatherForecast extends React.Component<any> {
     const { forecasts, match: { params: { startDateIndex } } } = this.props;
     const prevStartDateIndex = parseInt(startDateIndex || 0) - 5;
     const nextStartDateIndex = parseInt(startDateIndex || 0) + 5;
+    
     return (
       <div>
         <h1>Weather forecast</h1>

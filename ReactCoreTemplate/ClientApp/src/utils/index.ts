@@ -8,4 +8,7 @@ export * from './decorators';
 export * from './connectedrouter';
 export * from './configureStore';
 
+import ReduxRegistryDefault from './ReduxRegistry';
+export const ReduxRegistry = ReduxRegistryDefault;
+
 export { formatRequestQuery } from './formatRequestQuery';

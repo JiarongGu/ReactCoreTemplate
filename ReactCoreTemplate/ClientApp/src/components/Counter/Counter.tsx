@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { createReducer, registerReducers } from '@utils';
+import { createReducer, ReduxRegistry } from '@utils';
 import { connect } from 'react-redux';
 
 const increment = createReducer((state) => ++state);
 
-registerReducers({ 
+ReduxRegistry.registerReducer({ 
   stateName: 'count',
   initalState: 0,
   reducerEvents: [increment]

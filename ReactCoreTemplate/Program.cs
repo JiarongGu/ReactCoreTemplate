@@ -19,7 +19,7 @@ namespace ReactCoreTemplate
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://[::1]:5000/")
+                .UseUrls("http://localhost:5000/;", "https://localhost:5001/")
                 .UseStartup<Startup>();
     }
 }

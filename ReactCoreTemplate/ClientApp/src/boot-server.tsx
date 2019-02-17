@@ -70,7 +70,7 @@ export default createServerRenderer(params => {
         html: originalHtml
           .replace('<!-- body -->', renderToString(app))
           .replace('<!-- head -->', headTags)
-          .replace('<!-- store -->', `<script>window.__PRELOADED_STATE__ = ${JSON.stringify(state)}</script>`)
+          .replace('<!-- store -->', `<script id='preloaded-state'>window.__PRELOADED_STATE__ = ${JSON.stringify(state)}</script>`)
       });
     }, reject); // Also propagate any errors back into the host application
   });

@@ -27,4 +27,4 @@ By using this way, the ServerRendering app can also get the data from api before
 The utils in the ClientApp is something I made just for convenience, which does something similar to redux-action,
 and some other redux related helpers.
 
-Added something call redux registry, to register redux events on the fly
+Added something call 'redux registry', to register redux events on the fly

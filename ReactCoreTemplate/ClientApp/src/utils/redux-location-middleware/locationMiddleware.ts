@@ -1,8 +1,8 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { PromiseHandlerRegistry, PromiseHandler, PromiseHandlerEvent } from '../redux-handler-creators';
-import { getCurrentStore } from '../redux-creators';
+import { PromiseHandler, PromiseHandlerEvent } from '../redux-handler-creators';
+import { getCurrentStore } from '../redux-creators/reducerRegistry';
 
-const locationHandlerRegistry = new PromiseHandlerRegistry<Location>();
+const locationHanlderMap = new Map<string, PromiseHandler<Location>>();
 let locationState: Location;
 
 export const locationMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispatch<any>) => (action: AnyAction) => {
@@ -13,14 +13,13 @@ export const locationMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dis
 };
 
 export const locationMiddlewareHandler: PromiseHandler<Location> = async (store, payload) => {
-  if(!store) return;
-  locationState = payload;
-  const handlermaps = locationHandlerRegistry.getHandlers();
-  const handlers = Object.keys(handlermaps).map(key => handlermaps[key]);
-  return Promise.all(handlers.map(handler => handler(store, payload)));
+  if(!store) return; locationState = payload;
+
+  const handlermaps = Array.from(locationHanlderMap.values());
+  return Promise.all(handlermaps.map(handler => handler(store, payload)));
 }
 
-export const registerLocationHandler = async (...handlerEvents: PromiseHandlerEvent<Location>[]) => {
-  locationHandlerRegistry.registerHandler(...handlerEvents);
+export const registerLocationHandler = async (handlerEvent: PromiseHandlerEvent<Location>) => {
+  locationHanlderMap.set(handlerEvent.action.toString(), handlerEvent.handler);
   await locationMiddlewareHandler(getCurrentStore(), locationState);
 } 

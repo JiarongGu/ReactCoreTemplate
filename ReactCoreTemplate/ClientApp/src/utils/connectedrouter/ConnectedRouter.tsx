@@ -3,10 +3,10 @@ import { Store } from 'redux';
 import { Router } from 'react-router';
 import { History, UnregisterCallback } from 'history';
 
-export class ConnectedRouter extends React.Component<{history: History, store: Store<any>, hasState?: boolean}> {
+export class ConnectedRouter extends React.PureComponent<{history: History, store: Store<any>, dispatchOnMount?: boolean }> {
   unregisterListener?: UnregisterCallback;
 
-  onLocationChange = (location) => {
+  dispathLocationChange = (location) => {
     this.props.store.dispatch({ 
       type:'@@router/LOCATION_CHANGE', 
       payload: location 
@@ -14,11 +14,11 @@ export class ConnectedRouter extends React.Component<{history: History, store: S
   }
 
   componentWillMount() {
-    // we do not want to initalize the location event again if the inital state is already processed
-    if(!this.props.hasState)
-      this.onLocationChange(this.props.history.location);
+    if(this.props.dispatchOnMount) { 
+      this.dispathLocationChange(this.props.history.location);
+    }
       
-    this.unregisterListener = this.props.history.listen(this.onLocationChange);
+    this.unregisterListener = this.props.history.listen(this.dispathLocationChange);
   }
 
   componentWillUnmount() {

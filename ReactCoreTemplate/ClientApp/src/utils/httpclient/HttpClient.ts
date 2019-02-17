@@ -1,4 +1,5 @@
 import Axios, { AxiosRequestConfig, AxiosInstance, AxiosPromise, AxiosInterceptorManager, AxiosResponse, CancelTokenSource } from 'axios';
+import { formatRequestQuery } from './formatRequestQuery';
 
 export class HttpClient {
   _config?: AxiosRequestConfig;
@@ -25,31 +26,33 @@ export class HttpClient {
     response: AxiosInterceptorManager<AxiosResponse<any>>;
   };
 
-  request<T>(config: AxiosRequestConfig): AxiosPromise<T> {
+  request<TResponse>(config: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.request(config);
   }
 
-  delete<T>(url: string, config?: AxiosRequestConfig): AxiosPromise<T> {
+  delete<TResponse>(url: string, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.delete(url, config);
   }
 
-  head<T>(url: string, config?: AxiosRequestConfig): AxiosPromise<T> {
+  head<TResponse>(url: string, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.head(url, config);
   }
 
-  get<T>(url: string, config?: AxiosRequestConfig): AxiosPromise<T> {
+  get<TRequest, TResponse>(url: string, data?: TRequest, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
+    if (data)
+      return this._axios.get(`${url}?${formatRequestQuery(data)}`, config);
     return this._axios.get(url, config);
   }
 
-  post<T>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T> {
+  post<TRequest, TResponse>(url: string, data?: TRequest, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.post(url, data, config);
   }
 
-  put<T>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T> {
+  put<TRequest, TResponse>(url: string, data?: TRequest, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.put(url, data, config);
   }
 
-  patch<T>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T> {
+  patch<TRequest, TResponse>(url: string, data?: TRequest, config?: AxiosRequestConfig): AxiosPromise<TResponse> {
     return this._axios.patch(url, data, config);
   }
 }

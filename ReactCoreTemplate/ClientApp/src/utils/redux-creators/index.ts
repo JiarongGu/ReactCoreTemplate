@@ -15,5 +15,5 @@ export type ReducerHandler<TState, TPayload> = (state, payload?: TPayload) => TS
 
 export * from './combineReducerEvents';
 export * from './createReducer';
-export * from './reducerRegistry';
 export * from './registerReducers';
+export { registerStore } from './reducerRegistry';

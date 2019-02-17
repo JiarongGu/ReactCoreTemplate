@@ -1,14 +1,16 @@
 import { MiddlewareAPI, Dispatch, AnyAction } from 'redux';
-import { PromiseHandlerRegistry } from '@utils/redux-handler-creators';
+import { PromiseHandler, PromiseHandlerEvent } from '@utils/redux-handler-creators';
 
-const processHandlerRegistry = new PromiseHandlerRegistry<any>();
+const processHandlerMap = new Map<string, PromiseHandler<any>>();
+
 export const processMiddleware: any = (store: MiddlewareAPI<any>) => (next: Dispatch<any>) => (action: AnyAction) => {
-  const handler = processHandlerRegistry.getHandlers()[action.type];
-
+  const handler = processHandlerMap.get(action.type);
   if(handler) {
     handler(store, action.payload);
   }
   return next(action);
 };
 
-export const registerProcessHandler = processHandlerRegistry.registerHandler;
+export function registerProcessHandler(handlerEvent: PromiseHandlerEvent<any>) {
+  processHandlerMap.set(handlerEvent.action.toString(), handlerEvent.handler);
+}

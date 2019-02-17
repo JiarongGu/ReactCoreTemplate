@@ -8,12 +8,12 @@ class ReduxRegistry {
     registerReducer(registration);
     return this;
   }
-  registerProcessHandler<TPayload>(...handlerEvents: PromiseHandlerEvent<TPayload>[]): ReduxRegistry {
-    registerProcessHandler(...handlerEvents);
+  registerProcessHandler<TPayload>(handlerEvent: PromiseHandlerEvent<TPayload>): ReduxRegistry {
+    registerProcessHandler(handlerEvent);
     return this;
   }
-  registerLocationHandler<Location>(...handlerEvents: PromiseHandlerEvent<Location>[]): ReduxRegistry {
-    registerLocationHandler(...handlerEvents as any);
+  registerLocationHandler(handlerEvent: PromiseHandlerEvent<Location>): ReduxRegistry {
+    registerLocationHandler(handlerEvent);
     return this;
   }
 }

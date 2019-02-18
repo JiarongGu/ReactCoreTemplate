@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { createReducer, ReduxRegistry } from '@utils';
+import * as React from 'react';
 import { connect } from 'react-redux';
 
 const increment = createReducer((state) => ++state);
 
-ReduxRegistry.registerReducer({ 
-  stateName: 'count',
+ReduxRegistry.registerReducer({
   initalState: 0,
-  reducerEvents: [increment]
+  stateName: 'count',
+  reducerEvents: [ increment ]
 });
 
 @connect(

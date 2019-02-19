@@ -6,7 +6,7 @@ import { createBrowserHistory } from 'history';
 import { Routes } from './Routes';
 import { ConnectedRouter, configureStore } from './utils';
 import { ApplicationState } from './store';
-import './services';
+import '@services';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }

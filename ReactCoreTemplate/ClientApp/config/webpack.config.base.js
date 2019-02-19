@@ -21,7 +21,8 @@ const resolveAlias = {
     '@styles': resolveSource('styles'),
     '@utils': resolveSource('utils'),
     '@store': resolveSource('store'),
-    '@components': resolveSource('components')
+    '@components': resolveSource('components'),
+    '@services': resolveSource('services')
 }
 
 module.exports = {

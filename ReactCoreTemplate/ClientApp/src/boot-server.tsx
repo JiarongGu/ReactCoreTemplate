@@ -11,8 +11,9 @@ import Helmet from 'react-helmet';
 import * as https from 'https';
 import { configureStore } from './utils';
 import { initalizeStore, ApplicationState } from './store';
-import './services';
 import { AppInfoState } from './services';
+import '@services';
+import '@components';
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {

@@ -45,32 +45,56 @@ namespace ReactCoreTemplate
                 app.UseHsts();
             }
 
+            app.Map("/api", apiApp => {
+                apiApp.UseMvc(routes => routes.MapRoute("default", "{controller}/{action=Index}/{id?}"));
+            });
+            
+            // add URL prefix
+            app.Use((context, next) =>
+            {
+                var userAgent = context.Request.Headers["User-Agent"].ToString();
+
+                // check if user agent is mobile (fake function)
+                if (userAgent == "mobile")
+                {
+                    context.Request.Path = "/mobile" + context.Request.Path;
+                }
+                else
+                {
+                    context.Request.Path = "/desktop" + context.Request.Path;
+                }
+
+                return next.Invoke();
+            });
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
 
-            app.MapWhen(
-                context => 
-                    context.Request.Path.StartsWithSegments("/api"),
-                apiApp =>
+            app.Map("/mobile", spaApp =>
+                spaApp.UseSpa(spa =>
                 {
-                    apiApp.UseMvc(routes =>
+                    spa.Options.SourcePath = "ClientApp/build";
+                    spa.Options.DefaultPage = "/mobile/index.html";
+                    spa.UseSpaPrerendering(options =>
                     {
-                        routes.MapRoute(
-                            name: "default",
-                            template: "{controller}/{action=Index}/{id?}");
+                        options.BootModulePath = $"{spa.Options.SourcePath}/mobile/server/bundle.js";
+                        options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
                     });
-                });
+                })
+            );
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-                spa.UseSpaPrerendering(options =>
+            app.Map("/desktop", spaApp =>
+                spaApp.UseSpa(spa =>
                 {
-                    options.BootModulePath = $"{spa.Options.SourcePath}/build/server/bundle.js";
-                    options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
-                });
-            });
+                    spa.Options.SourcePath = "ClientApp/build";
+                    spa.Options.DefaultPage = "/desktop/index.html";
+                    spa.UseSpaPrerendering(options =>
+                    {
+                        options.BootModulePath = $"{spa.Options.SourcePath}/desktop/server/bundle.js";
+                        options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
+                    });
+                })
+            );
         }
     }
 }

@@ -1,18 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
-import { createReducer, ReduxRegistry } from '@utils';
+import { ReduxCreator } from '@utils';
 
 export class HttpConfigState {
   config?: AxiosRequestConfig
 }
 
-const setHttpConfig = createReducer<HttpConfigState, AxiosRequestConfig | undefined>((state, config) => ({ ...state, config }));
-
-ReduxRegistry.registerReducer({
-  stateName: 'httpConfig',
-  initalState: new HttpConfigState(),
-  reducerEvents: [setHttpConfig]
-})
-
-export const httpConfigActions = {
-  setHttpConfig: setHttpConfig.action
-}
+export const httpConfigActions = new ReduxCreator('httpConfig', new HttpConfigState())
+  .addReducer<AxiosRequestConfig | undefined>((state, config) => ({ ...state, config }), 'setHttpConfig')
+  .build();

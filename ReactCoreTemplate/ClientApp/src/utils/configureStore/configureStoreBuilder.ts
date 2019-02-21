@@ -3,14 +3,14 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { registerStore, buildRootReducer } from '../redux-creators/reducerRegistry';
 import { locationMiddleware } from '../redux-location-middleware';
-import { processMiddleware } from '../redux-process-middleware';
+import { effectsMiddleware } from '../redux-effects-middleware';
 
 export function configureStoreBuilder<TRootState>(reducers, 
     customActions?: (store: Store<TRootState>) => void,
     ...customMiddlewares: Middleware[]
   ) {
   return function (initialState?: TRootState): Store<TRootState> {
-    let middlewares = applyMiddleware(...customMiddlewares, locationMiddleware, processMiddleware);
+    let middlewares = applyMiddleware(...customMiddlewares, locationMiddleware, effectsMiddleware);
 
     if (process.env.NODE_ENV !== 'production') {
       middlewares = composeWithDevTools(middlewares);

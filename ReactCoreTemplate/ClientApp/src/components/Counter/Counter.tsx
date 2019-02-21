@@ -1,18 +1,14 @@
-import { createReducer, ReduxRegistry } from '@utils';
+import { ReduxCreator } from '@utils';
 import * as React from 'react';
 import { connect } from 'react-redux';
 
-const increment = createReducer((state) => ++state);
-
-ReduxRegistry.registerReducer({
-  initalState: 0,
-  stateName: 'count',
-  reducerEvents: [ increment ]
-});
+const actions = new ReduxCreator<Number>('count', 0)
+  .addReducer((state) => ++state, 'increment')
+  .build();
 
 @connect(
   state => ({ count: state.count }),
-  dispatch => ({ increment: () => dispatch(increment.action()) })
+  dispatch => ({ increment: () => dispatch(actions.increment()) })
 )
 export class Counter extends React.Component<any> {
   render() {

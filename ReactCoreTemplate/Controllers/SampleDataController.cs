@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ReactCoreTemplate.Controllers
 {
-    [Route("api/[controller]")]
-    public class SampleDataController : Controller
+    [Route("[controller]")]
+    [ApiController]
+    public class SampleDataController : ControllerBase
     {
         private static string[] Summaries = new[]
         {
@@ -15,7 +16,7 @@ namespace ReactCoreTemplate.Controllers
         };
 
         [HttpGet("[action]")]
-        public IEnumerable<WeatherForecast> WeatherForecasts(int startDateIndex)
+        public IEnumerable<WeatherForecast> WeatherForecasts([FromRoute]int startDateIndex)
         {
             var rng = new Random();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast

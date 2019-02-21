@@ -1,4 +1,4 @@
-import { createReducer, ReduxRegistry } from '@utils';
+import { ReduxCreator } from '@utils';
 
 export class AppInfoState {
   logoUrl: string;
@@ -10,12 +10,6 @@ export class AppInfoState {
   }
 }
 
-const setAppInfo = createReducer<AppInfoState, AppInfoState>((state, appInfo) => ({ ...state, appInfo }));
-
-export const appInfoActions = { setAppInfo: setAppInfo.action };
-
-ReduxRegistry.registerReducer({
-  stateName: 'appInfo',
-  initalState: new AppInfoState(),
-  reducerEvents: [setAppInfo]
-})
+export const appInfoActions = new ReduxCreator('appInfo', new AppInfoState())
+  .addReducer<AppInfoState>((state, appInfo) => ({ ...state, appInfo }), 'setAppInfo')
+  .build();

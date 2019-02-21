@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --env dev --mode development --progress --color --port 3000 --open --hot",
+    "start": "webpack-dev-server --env dev --mode development --progress --color --port 3000 --open",
     "build": "webpack --mode production -p --progress --colors --env prod",
     "build:ssr": "webpack --mode development --progress --colors --env server",
     "build:all": "npm run build & npm run build:ssr",

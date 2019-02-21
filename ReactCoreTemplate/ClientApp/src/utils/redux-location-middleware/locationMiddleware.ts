@@ -19,7 +19,7 @@ export const locationMiddlewareHandler: PromiseHandler<Location> = async (store,
   return Promise.all(handlermaps.map(handler => handler(store, payload)));
 }
 
-export const registerLocationHandler = async (handlerEvent: PromiseHandlerEvent<Location>) => {
+export const registerLocationEvent = async (handlerEvent: PromiseHandlerEvent<Location>) => {
   locationHanlderMap.set(handlerEvent.action.toString(), handlerEvent.handler);
   await locationMiddlewareHandler(getCurrentStore(), locationState);
 } 

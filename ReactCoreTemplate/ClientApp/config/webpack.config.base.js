@@ -10,7 +10,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 
-const extractMoudleScssPlugin = new ExtractTextPlugin('site.[md5:contenthash:hex:20].css');
+const extractMoudleScssPlugin = new ExtractTextPlugin('module.[md5:contenthash:hex:20].css');
+const extractGlobalScssPlugin = new ExtractTextPlugin('global.[md5:contenthash:hex:20].css');
 
 // utils
 const resolveSassRules = require('./utils/resolveSassRules');
@@ -24,6 +25,10 @@ const resolveAlias = {
     '@components': resolveSource('components'),
     '@services': resolveSource('services')
 }
+
+// style files regexes
+const sassRegex = /\[^.module].(scss|sass)$/;
+const sassModuleRegex = /\.module\.(scss|sass)$/;
 
 module.exports = {
     context: sourcePath,
@@ -49,10 +54,16 @@ module.exports = {
                 exclude: /node_modules/
             },
             resolveSassRules({
-                test: /\.scss$/,
+                test: sassModuleRegex,
                 cssLoader: 'typings-for-css-modules-loader',
                 localIdentName: '[name]__[local]___[hash:base64:5]',
                 extractPlugin: extractMoudleScssPlugin
+            }),
+            resolveSassRules({
+                test: sassRegex,
+                cssLoader: 'typings-for-css-modules-loader',
+                localIdentName: '[name]',
+                extractPlugin: extractGlobalScssPlugin
             })
         ]
     },
@@ -63,5 +74,6 @@ module.exports = {
         new MiniCssExtractPlugin(),
         new WebpackCleanupPlugin(),
         extractMoudleScssPlugin,
+        extractGlobalScssPlugin,
     ]
 };

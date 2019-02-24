@@ -1,4 +1,4 @@
-import { ReduxCreator } from '@utils';
+import { ReduxCreator } from '@banbrick/react-utils';
 import * as React from 'react';
 import { connect } from 'react-redux';
 

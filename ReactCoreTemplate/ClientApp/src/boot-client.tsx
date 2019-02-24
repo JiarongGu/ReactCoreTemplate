@@ -4,7 +4,7 @@ import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { Routes } from './Routes';
-import { ConnectedRouter, configureStore } from './utils';
+import { ConnectedRouter, configureStore } from '@banbrick/react-utils';
 import { ApplicationState } from './store';
 import '@services';
 

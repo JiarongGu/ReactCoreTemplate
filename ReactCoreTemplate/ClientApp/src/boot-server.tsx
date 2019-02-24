@@ -9,7 +9,7 @@ import { Routes } from './Routes';
 import Helmet from 'react-helmet';
 
 import * as https from 'https';
-import { configureStore } from './utils';
+import { configureStore } from '@banbrick/react-utils';
 import { initalizeStore, ApplicationState } from './store';
 import { AppInfoState } from './services';
 import '@services';

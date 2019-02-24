@@ -1,5 +1,5 @@
 import { matchPath } from 'react-router';
-import { ReduxCreator } from '@utils';
+import { ReduxCreator } from '@banbrick/react-utils';
 import { WeatherForecastSource } from './WatherForecastSource';
 import { ApplicationState } from '@store';
 import { Store } from 'redux';

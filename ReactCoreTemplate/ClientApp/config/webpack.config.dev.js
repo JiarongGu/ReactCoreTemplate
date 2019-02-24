@@ -6,7 +6,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const appPublic = path.resolve(__dirname, '../public');
-const appBuild = path.resolve(__dirname, '../build');
+const appBuild = path.resolve(__dirname, '../build/desktop');
 
 module.exports = {
     devtool: 'source-map',

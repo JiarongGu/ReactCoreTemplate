@@ -10,7 +10,7 @@ module.exports = {
     output: {
         filename: 'bundle.js',
         libraryTarget: 'commonjs',
-        path: path.resolve(__dirname, '../build/server')
+        path: path.resolve(__dirname, '../build/desktop/server')
     },
     plugins: [
         new webpack.optimize.LimitChunkCountPlugin({

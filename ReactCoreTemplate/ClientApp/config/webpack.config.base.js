@@ -3,7 +3,7 @@ const webpack = require('webpack');
 
 // variables
 const sourcePath = path.join(__dirname, '../src');
-const outPath = path.join(__dirname, '../build');
+const outPath = path.join(__dirname, '../build/desktop');
 
 // plugins
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');

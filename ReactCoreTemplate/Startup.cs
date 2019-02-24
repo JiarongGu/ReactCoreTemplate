@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ReactCoreTemplate.Services;
@@ -28,6 +26,8 @@ namespace ReactCoreTemplate
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
+                // we currently have /build/desktop as our client location
+                // you may also have other client like /build/{client folder}
                 configuration.RootPath = "ClientApp/build";
             });
         }
@@ -45,48 +45,32 @@ namespace ReactCoreTemplate
                 app.UseHsts();
             }
 
+            // lets do redirect before pipeline
+            app.UseHttpsRedirection();
+
+            // put api route to the front, we want to use the same end point of api
             app.Map("/api", apiApp => {
                 apiApp.UseMvc(routes => routes.MapRoute("default", "{controller}/{action=Index}/{id?}"));
             });
             
-            // add URL prefix
+            // Add URL prefix, so all middleware below will follow the new request URL
             app.Use((context, next) =>
             {
-                var userAgent = context.Request.Headers["User-Agent"].ToString();
-
-                // check if user agent is mobile (fake function)
-                if (userAgent == "mobile")
-                {
-                    context.Request.Path = "/mobile" + context.Request.Path;
-                }
-                else
-                {
-                    context.Request.Path = "/desktop" + context.Request.Path;
-                }
-
+                // you can have different conditions to add different prefixes
+                context.Request.Path = "/desktop" + context.Request.Path;
                 return next.Invoke();
             });
 
-            app.UseHttpsRedirection();
+            // now the static files will be served by new request URL
             app.UseStaticFiles();
 
-            app.Map("/mobile", spaApp =>
-                spaApp.UseSpa(spa =>
-                {
-                    spa.Options.SourcePath = "ClientApp/build";
-                    spa.Options.DefaultPage = "/mobile/index.html";
-                    spa.UseSpaPrerendering(options =>
-                    {
-                        options.BootModulePath = $"{spa.Options.SourcePath}/mobile/server/bundle.js";
-                        options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
-                    });
-                })
-            );
-
+            // use map to remove the prefix and go to the real file location
             app.Map("/desktop", spaApp =>
                 spaApp.UseSpa(spa =>
                 {
                     spa.Options.SourcePath = "ClientApp/build";
+                    // because the root is 'ClientApp/build' 
+                    // so we need to use the index.html in desktop folder for SSR
                     spa.Options.DefaultPage = "/desktop/index.html";
                     spa.UseSpaPrerendering(options =>
                     {

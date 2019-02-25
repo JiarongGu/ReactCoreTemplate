@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { HttpClient } from '@utils/httpclient';
+import { HttpClient } from '@banbrick/react-utils';
 
 export class WeatherForecastSource {
   _httpClient: HttpClient

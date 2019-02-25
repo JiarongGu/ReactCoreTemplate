@@ -1,4 +1,4 @@
-import { ReduxCreator } from '@utils';
+import { ReduxCreator } from '@banbrick/react-utils';
 
 export class AppInfoState {
   logoUrl: string;

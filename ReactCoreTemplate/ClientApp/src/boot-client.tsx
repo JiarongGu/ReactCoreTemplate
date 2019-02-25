@@ -3,8 +3,10 @@ import * as ReactDOM from 'react-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
+import { routerMiddleware, ConnectedRouter, connectRouter, RouterState } from 'connected-react-router';
+import { configureStore } from '@banbrick/react-utils';
+
 import { Routes } from './Routes';
-import { ConnectedRouter, configureStore } from './utils';
 import { ApplicationState } from './store';
 import '@services';
 
@@ -20,7 +22,16 @@ delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-const store = configureStore<ApplicationState>(undefined, preloadedState);
+const store = configureStore<ApplicationState>({
+  initalState: preloadedState,
+  reducers: { router: connectRouter(history) },
+  middlewares: [routerMiddleware(history)],
+  devTool: true,
+  locationMiddleware: {
+    actionType: '@@router/LOCATION_CHANGE',
+    locationFormatter: (payload: RouterState) => payload.location
+  }
+});
 
 export const App = hot(module)(() => (
   <Routes />
@@ -29,7 +40,7 @@ export const App = hot(module)(() => (
 // initalize default state with requests, then render dom
 ReactDOM.hydrate(
   <Provider store={store}>
-    <ConnectedRouter history={history} store={store} dispatchOnMount={!preloadedState} >
+    <ConnectedRouter history={history}>
       <App />
     </ConnectedRouter>
   </Provider>,

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ReactCoreTemplate.Services;
+using System.Threading.Tasks;
 
 namespace ReactCoreTemplate
 {
@@ -50,7 +51,7 @@ namespace ReactCoreTemplate
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
+            
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

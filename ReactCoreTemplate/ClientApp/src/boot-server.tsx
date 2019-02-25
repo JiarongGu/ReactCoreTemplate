@@ -14,6 +14,7 @@ import { initalizeStore, ApplicationState } from './store';
 import { AppInfoState } from './services';
 import '@services';
 import '@components';
+import { createMemoryHistory } from 'history';
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {
@@ -32,11 +33,14 @@ export default createServerRenderer(params => {
     const pageInfo = { pathname: urlAfterBasename }
     const initalState: any = { appInfo: new AppInfoState(false)};
 
-    const store = configureStore<ApplicationState>(undefined, initalState);
+    const history = createMemoryHistory();
+
+    const store = configureStore<ApplicationState>({ initalState });
 
     // Prepare an instance of the application and perform an inital render that will
     // cause any async tasks (e.g., data access) to begin
     const routerContext: StaticRouterContext = { url: undefined };
+
     const app = (
       <Provider store={store}>
         <StaticRouter basename={basename} context={routerContext} location={params.location.path}>

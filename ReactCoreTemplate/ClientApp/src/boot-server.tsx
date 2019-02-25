@@ -1,4 +1,9 @@
 import * as React from 'react';
+import * as https from 'https';
+import { AxiosRequestConfig } from 'axios';
+import Helmet from 'react-helmet';
+import { Store } from 'redux';
+import { processLocationEvents } from '@banbrick/react-utils';
 import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
@@ -6,15 +11,12 @@ import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 
 import { Routes } from './Routes';
-import Helmet from 'react-helmet';
-
-import * as https from 'https';
 import { configureStore } from '@banbrick/react-utils';
-import { initalizeStore, ApplicationState } from './store';
-import { AppInfoState } from './services';
+import { ApplicationState } from './store';
+import { AppInfoState, httpConfigActions } from './services';
+
 import '@services';
 import '@components';
-import { createMemoryHistory } from 'history';
 
 export default createServerRenderer(params => {
   return new Promise<RenderResult>((resolve, reject) => {
@@ -30,12 +32,15 @@ export default createServerRenderer(params => {
     // Parpare store
     const httpsAgent = new https.Agent({ rejectUnauthorized: false });
     const config = { baseURL: host, httpsAgent };
-    const pageInfo = { pathname: urlAfterBasename }
     const initalState: any = { appInfo: new AppInfoState(false)};
 
-    const history = createMemoryHistory();
-
     const store = configureStore<ApplicationState>({ initalState });
+
+    // dispatch new http config
+    store.dispatch(httpConfigActions.setHttpConfig(config));
+
+    // load data for current url
+    const initalizeTask  = processLocationEvents(store, { pathname: urlAfterBasename } as any);
 
     // Prepare an instance of the application and perform an inital render that will
     // cause any async tasks (e.g., data access) to begin
@@ -57,7 +62,7 @@ export default createServerRenderer(params => {
 
     // Once any async tasks are done, we can perform the final render
     // We also send the redux store state, so the client can continue execution where the server left off
-    Promise.all([params.domainTasks, initalizeStore(store, pageInfo, config)]).then(() => {
+    Promise.all([params.domainTasks, initalizeTask]).then(() => {
       // render headers
       const head = Helmet.renderStatic();
       const headTags =

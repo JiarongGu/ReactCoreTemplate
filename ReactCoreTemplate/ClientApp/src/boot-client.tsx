@@ -1,11 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import { Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { routerMiddleware, ConnectedRouter, connectRouter, RouterState } from 'connected-react-router';
 import { configureStore } from '@banbrick/react-utils';
-
 import { Routes } from './Routes';
 import { ApplicationState } from './store';
 import '@services';
@@ -15,24 +14,27 @@ declare global {
 }
 
 // Grab the state from a global variable injected into the server-generated HTML
-const preloadedState = window.__PRELOADED_STATE__;
+const initalState = window.__PRELOADED_STATE__;
 
 // Allow the passed state to be garbage-collected
 delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-const store = configureStore<ApplicationState>({
-  initalState: preloadedState,
-  reducers: { router: connectRouter(history) },
-  middlewares: [routerMiddleware(history)],
-  devTool: true,
-  locationMiddleware: {
-    actionType: '@@router/LOCATION_CHANGE',
-    locationFormatter: (payload: RouterState) => payload.location
-  }
+const locationChangeAction = 'LOCATION_CHANGE';
+const locationMiddleware = { actionType: locationChangeAction };
+const store = configureStore<ApplicationState>({ initalState, locationMiddleware, devTool: true });
+
+// setup location change event
+history.listen((location) => {
+  store.dispatch({ type: locationChangeAction, payload: location });
 });
 
+// fire location event when there is no inital state
+if (!initalState)
+  store.dispatch({ type: locationChangeAction, payload: history.location });
+
+// hot app module
 export const App = hot(module)(() => (
   <Routes />
 ));
@@ -40,9 +42,9 @@ export const App = hot(module)(() => (
 // initalize default state with requests, then render dom
 ReactDOM.hydrate(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
+    <Router history={history}>
       <App />
-    </ConnectedRouter>
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

@@ -44,11 +44,12 @@ namespace ReactCoreTemplate
                 app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
+
             app.Map("/api", apiApp => {
                 apiApp.UseMvc(routes => routes.MapRoute("default", "{controller}/{action=Index}/{id?}"));
             });
 
-            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
             

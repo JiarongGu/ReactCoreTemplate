@@ -5,12 +5,15 @@ import { WatherForecastState } from './watherForecastServices';
 
 @connect(
   (state: { watherForecast: WatherForecastState }) => (
-    { forecasts: state.watherForecast.forecasts }
+    { 
+      forecasts: state.watherForecast.forecasts,
+      loading: state.watherForecast.loading
+    }
   )
 )
 export class WeatherForecast extends React.Component<any> {
   render() {
-    const { forecasts, match: { params: { startDateIndex } } } = this.props;
+    const { forecasts, loading, match: { params: { startDateIndex } } } = this.props;
     const prevStartDateIndex = parseInt(startDateIndex || 0) - 5;
     const nextStartDateIndex = parseInt(startDateIndex || 0) + 5;
     
@@ -18,7 +21,8 @@ export class WeatherForecast extends React.Component<any> {
       <div>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {forecasts &&
+        {!!loading && <p>loading forecasts...</p> }
+        {!loading && forecasts &&
           <table className='table'>
             <thead>
               <tr>

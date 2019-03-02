@@ -1,5 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
-import { ReduxCreator } from '@banbrick/react-utils';
+import { ReduxCreator } from '@banbrick/redux-creator';
 
 export class HttpConfigState {
   config?: AxiosRequestConfig

@@ -4,10 +4,10 @@ import { Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { configureStore } from '@banbrick/react-utils';
 import { Routes } from './Routes';
 import { ApplicationState } from './store';
 import '@services';
+import { configureStore } from '@banbrick/redux-creator';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }

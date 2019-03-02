@@ -1,17 +1,14 @@
 import * as React from 'react';
 import * as https from 'https';
-import { AxiosRequestConfig } from 'axios';
 import Helmet from 'react-helmet';
-import { Store } from 'redux';
-import { processLocationEvents } from '@banbrick/react-utils';
 import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
+import { configureStore, processLocationTasks } from '@banbrick/redux-creator';
 
 import { Routes } from './Routes';
-import { configureStore } from '@banbrick/react-utils';
 import { ApplicationState } from './store';
 import { AppInfoState, httpConfigActions } from './services';
 
@@ -40,7 +37,7 @@ export default createServerRenderer(params => {
     store.dispatch(httpConfigActions.setHttpConfig(config));
 
     // load data for current url
-    const initalizeTask  = processLocationEvents(store, { pathname: urlAfterBasename } as any);
+    const initalizeTask  = processLocationTasks(store, { pathname: urlAfterBasename } as any);
 
     // Prepare an instance of the application and perform an inital render that will
     // cause any async tasks (e.g., data access) to begin

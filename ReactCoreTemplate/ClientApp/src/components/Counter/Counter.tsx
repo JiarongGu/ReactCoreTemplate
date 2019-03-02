@@ -1,6 +1,7 @@
-import { ReduxCreator } from '@banbrick/react-utils';
+
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { ReduxCreator } from '@banbrick/redux-creator';
 
 const actions = new ReduxCreator<number>('count', 0)
   .addReducer((state) => ++state, 'increment')

@@ -36,13 +36,15 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
   // dispatch new http config
   store.dispatch(httpConfigActions.setHttpConfig(config));
 
-  // Prepare an instance of the application and perform an inital render that will
-  // cause any async tasks (e.g., data access) to begin
   const routerContext: StaticRouterContext = { url: undefined };
 
+  // load all chunk components
   await Loadable.preloadAll();
+
+  // process location tasks
   await processLocationTasks(store, { pathname: urlAfterBasename } as any);
 
+  // Prepare an instance of the application and perform an inital render that will
   const app = (
     <Provider store={store}>
       <StaticRouter basename={basename} context={routerContext} location={params.location.path}>
@@ -50,7 +52,8 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
       </StaticRouter>
     </Provider>
   );
-  
+
+  // ensure all effect task completed
   await Promise.all(getEffectTasks());
 
   // load data for current url

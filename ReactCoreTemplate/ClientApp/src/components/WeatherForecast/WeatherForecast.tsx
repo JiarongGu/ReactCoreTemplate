@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { WatherForecastState } from './watherForecastServices';
+import './watherForecastServices';
 
 @connect(
   (state: { watherForecast: WatherForecastState }) => (
@@ -11,7 +12,7 @@ import { WatherForecastState } from './watherForecastServices';
     }
   )
 )
-export class WeatherForecast extends React.Component<any> {
+export default class WeatherForecast extends React.Component<any> {
   render() {
     const { forecasts, loading, match: { params: { startDateIndex } } } = this.props;
     const prevStartDateIndex = parseInt(startDateIndex || 0) - 5;

@@ -22,8 +22,18 @@ delete window.__PRELOADED_STATE__;
 // prepare store
 const history = createBrowserHistory();
 const locationChangeAction = 'LOCATION_CHANGE';
-const locationMiddleware = { actionType: locationChangeAction };
-const store = configureStore<ApplicationState>({ initalState, locationMiddleware, devTool: true });
+
+const locationMiddleware = {
+  actionType: locationChangeAction,
+  initalLocation: history.location,
+  reload: true
+};
+
+const store = configureStore<ApplicationState>({ 
+  initalState, 
+  locationMiddleware, 
+  devTool: true 
+});
 
 // setup location change event
 history.listen((location) => {

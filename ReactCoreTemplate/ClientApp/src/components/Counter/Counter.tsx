@@ -11,7 +11,7 @@ const actions = new ReduxCreator<number>('count', 0)
   state => ({ count: state.count }),
   dispatch => ({ increment: () => dispatch(actions.increment()) })
 )
-export class Counter extends React.Component<any> {
+export default class Counter extends React.Component<any> {
   render() {
     return (
       <div>

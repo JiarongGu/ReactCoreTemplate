@@ -10,35 +10,45 @@ export class WatherForecastState {
   loading: boolean;
 }
 
+// create reducer actions
+const reducerActions = 
+  new ReduxCreator<WatherForecastState>('watherForecast', new WatherForecastState())
+    .addReducer<any[]>((state, forecasts) => ({ ...state, forecasts }), 'setForcasts')
+    .addReducer<boolean>((state, loading) => ({ ...state, loading }), 'setLoading')
+    .build();
+
+// create load effect
+const loadWeatherForecast = async (store: MiddlewareAPI<any, ApplicationState>, startDateIndex: number) => {
+  const httpConfig = store.getState().httpConfig.config;
+  const dataSource = new WeatherForecastSource(httpConfig);
+  store.dispatch(reducerActions.setLoading(true));
+  const forecasts = await dataSource.fetchdata(startDateIndex);
+  store.dispatch(reducerActions.setLoading(false));
+  store.dispatch(reducerActions.setForcasts(forecasts));
+}
+
+const effectActions = 
+  new ReduxCreator<WatherForecastState>()
+    .addEffectHandler(loadWeatherForecast, 'loadWeatherForecast')
+    .build();
+
+// add location handler
 const locationHanlder = async (store: MiddlewareAPI<any, ApplicationState>, location: Location) => {
   var matches = matchPath(location.pathname,  { path: '/weather-forecast/:startDateIndex?'});
   if (matches) {
     const startDateIndex = (matches.params as any).startDateIndex;
     // dispatch effect
-    store.dispatch(watherForecastActions.loadWeatherForecast(startDateIndex));
+    store.dispatch(effectActions.loadWeatherForecast(startDateIndex));
   }
 };
 
-// load effect
-const loadWeatherForecast = async (store: MiddlewareAPI<any, ApplicationState>, startDateIndex: number) => {
-  const httpConfig = store.getState().httpConfig.config;
-  const dataSource = new WeatherForecastSource(httpConfig);
-  store.dispatch(watherForecastActions.setLoading(true));
-  const forecasts = await dataSource.fetchdata(startDateIndex);
-  store.dispatch(watherForecastActions.setLoading(false));
-  store.dispatch(watherForecastActions.setForcasts(forecasts));
-}
+new ReduxCreator<WatherForecastState>()
+  .addLocationHandler(locationHanlder)
+  .build();
 
-const actions = 
-  new ReduxCreator<WatherForecastState>('watherForecast', new WatherForecastState())
-    .addReducer<any[]>((state, forecasts) => ({ ...state, forecasts }))
-    .addReducer<boolean>((state, loading) => ({ ...state, loading }))
-    .addEffectHandler<number>(loadWeatherForecast)
-    .addLocationHandler(locationHanlder)
-    .build();
-
+// export actions
 export const watherForecastActions = {
-  setForcasts: actions[0],
-  setLoading: actions[1],
-  loadWeatherForecast: actions[2]
+  setForcasts: reducerActions.setForcasts,
+  setLoading: reducerActions.setLoading,
+  loadWeatherForecast: effectActions.loadWeatherForecast
 }

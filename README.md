@@ -1,5 +1,6 @@
 # ReactCoreTemplate
-Example for .net core, React + Redux + Typescript + Server Rendering, hope this can help someone who is seeking for .net core + react
+Example for .net core, React + Redux + Typescript + Server Rendering + Code Split
+hope this can help someone who is seeking for .net core + react
 
 ## Getting Started
 This project is using .net core 2.2, please ensure you have the right sdk.  

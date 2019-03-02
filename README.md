@@ -1,5 +1,5 @@
 # ReactCoreTemplate
-Example for .net core, React + Redux + Typescript + Server Rendering + Code Split
+Example for .net core, React + Redux + Typescript + Server Rendering + Code Split  
 hope this can help someone who is seeking for .net core + react
 
 ## Getting Started

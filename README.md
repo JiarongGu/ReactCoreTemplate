@@ -15,14 +15,14 @@ npm run build:all
 The proxy for api to .net core using https port 5001 
 
 ## Rewire Overrides
-(react-app-rewired)[https://github.com/timarney/react-app-rewired] for override react-script default config. 
+[react-app-rewired](https://github.com/timarney/react-app-rewired]) for override react-script default config.  
 currently used for:
 - apply typescript alias
 - override config to generate server bundle
 
 ## SCSS Typing
-css-module typing is a marjor problem for using typescript, so I used a helper library to do it. 
-(typed-scss-modules)https://github.com/skovy/typed-scss-modules for generate scss.d.ts files to use for css module  
+css-module typing is a marjor problem for using typescript, so I used a helper library to do it.  
+[typed-scss-modules](https://github.com/skovy/typed-scss-modules) for generate scss.d.ts files to use for css module.   
 generate typing files use:
 ```
 npm run scss

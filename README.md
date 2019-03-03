@@ -19,7 +19,7 @@ The proxy for api to .net core using https port 5001
 currently used for:
 - apply typescript alias
 - override config to generate server bundle
-
+  
 ## SCSS Typing
 css-module typing is a marjor problem for using typescript, so I used a helper library to do it.  
 [typed-scss-modules](https://github.com/skovy/typed-scss-modules) for generate scss.d.ts files to use for css module.   
@@ -31,6 +31,15 @@ watch scss file changes auto-generate use:
 ```
 npm run scss:watch
 ```
+  
+## Server Side Rendering
+because this project used .net core to follow that we need to create a separated bundle for server, which current react-script does not support, so I did some hack
+  
+build in server mode when pass ``--server`` in ``react-app-rewire build``, the bundle will be built in server mode.  
+  
+postbuild scripts to move the files from ``build`` to ``dist`` to avoid file clean up by second run of react-script.  
+
+``server.tsx`` uses ``aspnet-prerendering`` as interface wrapper for .net core use
   
 ## Something about this example
 The example uses redux middleware with react-router-redux (can be replaced by the ConnctedRouter in utils folder),

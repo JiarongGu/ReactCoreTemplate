@@ -1,5 +1,7 @@
 # ReactCoreTemplate
-Example for .net core, React + Redux + Typescript + Server Rendering + Code Split  
+Example for .Net Core + React + Redux + Typescript + Server Rendering + Code Split  
+Using creat-react-app (react-script) with react-app-rewired  
+  
 hope this can help someone who is seeking for .net core + react
 
 ## Getting Started

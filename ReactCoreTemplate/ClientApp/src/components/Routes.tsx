@@ -1,6 +1,6 @@
 ﻿import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { Home, Counter, WeatherForecast } from './components';
+import { Home, Counter, WeatherForecast } from '@components';
 
 export const Routes = () => (
   <Switch>

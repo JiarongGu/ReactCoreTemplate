@@ -6,8 +6,8 @@ import { Location } from 'history';
 import { ReduxCreator } from '@banbrick/redux-creator';
 
 export class WatherForecastState {
-  forecasts: any[];
-  loading: boolean;
+  forecasts: any[] = [];
+  loading: boolean = false;
 }
 
 // create reducer actions

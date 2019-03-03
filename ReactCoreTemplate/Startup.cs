@@ -27,7 +27,7 @@ namespace ReactCoreTemplate
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
-                configuration.RootPath = "ClientApp/build";
+                configuration.RootPath = "ClientApp/dist";
             });
         }
 
@@ -58,7 +58,7 @@ namespace ReactCoreTemplate
                 spa.Options.SourcePath = "ClientApp";
                 spa.UseSpaPrerendering(options =>
                 {
-                    options.BootModulePath = $"{spa.Options.SourcePath}/build/server/bundle.js";
+                    options.BootModulePath = $"{spa.Options.SourcePath}/dist/server/bundle.js";
                     options.SupplyData = SpaPrerenderingServiceLocator.GetProcessor(app);
                 });
             });

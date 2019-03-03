@@ -4,7 +4,7 @@ import { Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
-import { Routes } from './Routes';
+import { Routes } from './components';
 import { ApplicationState } from './store';
 import '@services';
 import { configureStore } from '@banbrick/redux-creator';

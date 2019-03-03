@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { WatherForecastState } from './watherForecastServices';
+import { connect } from '@utils';
+import styles from './watherForecast.module.scss';
 import './watherForecastServices';
 
 @connect(
@@ -19,7 +20,7 @@ export default class WeatherForecast extends React.Component<any> {
     const nextStartDateIndex = parseInt(startDateIndex || 0) + 5;
     
     return (
-      <div>
+      <div className={styles.container}>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
         {!!loading && <p>loading forecasts...</p> }

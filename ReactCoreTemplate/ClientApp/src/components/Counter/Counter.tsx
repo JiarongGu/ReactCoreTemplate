@@ -1,14 +1,14 @@
 
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { ReduxCreator } from '@banbrick/redux-creator';
+import { connect } from '@utils';
 
 const actions = new ReduxCreator<number>('count', 0)
   .addReducer((state) => ++state, 'increment')
   .build();
 
 @connect(
-  state => ({ count: state.count }),
+  (state: { count: number }) => ({ count: state.count }),
   dispatch => ({ increment: () => dispatch(actions.increment()) })
 )
 export default class Counter extends React.Component<any> {

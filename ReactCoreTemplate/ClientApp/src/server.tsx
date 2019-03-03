@@ -9,12 +9,12 @@ import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 import { configureStore, processLocationTasks, getEffectTasks } from '@banbrick/redux-creator';
 
-import { Routes } from './Routes';
-import { ApplicationState } from './store';
-import { AppInfoState, httpConfigActions } from './services';
 
 import '@services';
 import '@components';
+import { AppInfoState, httpConfigActions } from './services';
+import { ApplicationState } from './store';
+import { Routes } from './components';
 
 export default createServerRenderer(async (params): Promise<RenderResult> => {
   // Prepare Redux store with in-memory history, and dispatch a navigation event
@@ -65,13 +65,13 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
   }
 
   // render headers
-  const head = Helmet.renderStatic();
-  const headTags =
-    `${head.title.toString()}\n` +
-    `${head.meta.toString()}\n` +
-    `${head.link.toString()}\n` +
-    `${head.script.toString()}\n` +
-    `${head.noscript.toString()}`;
+  const header = Helmet.renderStatic();
+  const headerTags =
+    `${header.title.toString()}\n` +
+    `${header.meta.toString()}\n` +
+    `${header.link.toString()}\n` +
+    `${header.script.toString()}\n` +
+    `${header.noscript.toString()}`;
   const state = store.getState();
 
   // delete httpconfig which be using differently in client
@@ -79,8 +79,12 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
 
   return ({
     html: originalHtml
-      .replace('<!-- body -->', renderToString(app))
-      .replace('<!-- head -->', headTags)
-      .replace('<!-- store -->', `<script id='preloaded-state'>window.__PRELOADED_STATE__ = ${JSON.stringify(state)}</script>`)
+      .replace(holderTag('body'), renderToString(app))
+      .replace(holderTag('header'), headerTags)
+      .replace(holderTag('store'), `<script id='preloaded-state'>window.__PRELOADED_STATE__ = ${JSON.stringify(state)}</script>`)
   });
 });
+
+function holderTag(holder: string) {
+  return `<script holder="${holder}"></script>`;
+}

@@ -1,13 +1,16 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "build",
     "module": "esnext",
     "target": "es5",
-    "lib": ["es6", "es7", "dom"],
+    "lib": [
+      "es6",
+      "es7",
+      "dom"
+    ],
     "sourceMap": true,
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "moduleResolution": "node",
     "downlevelIteration": true,
     "forceConsistentCasingInFileNames": true,
@@ -19,15 +22,22 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "experimentalDecorators": true,
-    "paths": {
-      "@shared*": ["./src/shared*"],
-      "@store*": ["./src/store*"],
-      "@store": ["./src/store"],
-      "@utils*": ["./src/utils*"],
-      "@utils": ["./src/utils"],
-      "@components*": ["./src/utils*"],
-      "@components": ["./src/utils"]
-    }
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "exclude": ["build", "node_modules", "scripts"]
+  "exclude": [
+    "build",
+    "node_modules",
+    "scripts",
+    "dist"
+  ],
+  "include": [
+    "src"
+  ],
+  "extends": "./tspaths.json"
 }

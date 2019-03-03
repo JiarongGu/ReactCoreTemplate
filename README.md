@@ -41,8 +41,5 @@ postbuild scripts to move the files from ``build`` to ``dist`` to avoid file cle
 
 ``server.tsx`` uses ``aspnet-prerendering`` as interface wrapper for .net core use
   
-## Something about this example
-The example uses redux middleware with react-router-redux (can be replaced by the ConnctedRouter in utils folder),
-to trigger a redux store update each time when the location change matches the condition.  
-  
-By using this way, the ServerRendering app can also get the data from api before it calls to the render string.  
+## Redux Creator
+[redux-creator](https://github.com/JiarongGu/banbrick-redux-creator) is a library I created for redux code-spliting, and also used for ssr.

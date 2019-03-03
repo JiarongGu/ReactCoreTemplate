@@ -42,4 +42,4 @@ postbuild scripts to move the files from ``build`` to ``dist`` to avoid file cle
 ``server.tsx`` uses ``aspnet-prerendering`` as interface wrapper for .net core use
   
 ## Redux Creator
-[redux-creator](https://github.com/JiarongGu/banbrick-redux-creator) is a library I created for redux code-spliting, and also used for ssr.
+[redux-creator](https://github.com/JiarongGu/banbrick-redux-creator) is a library I created for redux code-spliting, and also used for ssr. It will gives a simpler use for redux, also ``processLocationTasks`` and ``getEffectTasks`` to ensure the data is completely loaded when rendering server html.

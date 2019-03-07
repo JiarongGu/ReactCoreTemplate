@@ -8,6 +8,7 @@ import { Routes } from './components';
 import { ApplicationState } from './store';
 import '@services';
 import { configureStore } from '@banbrick/redux-creator';
+import { loadableReady } from 'react-loadable';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }
@@ -29,10 +30,10 @@ const locationMiddleware = {
   reload: true
 };
 
-const store = configureStore<ApplicationState>({ 
-  initalState, 
-  locationMiddleware, 
-  devTool: true 
+const store = configureStore<ApplicationState>({
+  initalState,
+  locationMiddleware,
+  devTool: true
 });
 
 // setup location change event

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
-import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
+import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
 import { configureStore, processLocationTasks, getEffectTasks } from '@banbrick/redux-creator';
 
 
@@ -16,7 +16,7 @@ import { AppInfoState, httpConfigActions } from './services';
 import { ApplicationState } from './store';
 import { Routes } from './components';
 
-export default createServerRenderer(async (params): Promise<RenderResult> => {
+export default createServerRenderer(async (params: BootFuncParams): Promise<RenderResult> => {
   // Prepare Redux store with in-memory history, and dispatch a navigation event
   // corresponding to the incoming URL
   const basename = params.baseUrl.substring(0, params.baseUrl.length - 1); // Remove trailing slash
@@ -36,8 +36,6 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
   // dispatch new http config
   store.dispatch(httpConfigActions.setHttpConfig(config));
 
-  const routerContext: StaticRouterContext = { url: undefined };
-
   // load all chunk components
   await Loadable.preloadAll();
 
@@ -45,6 +43,8 @@ export default createServerRenderer(async (params): Promise<RenderResult> => {
   await processLocationTasks(store, { pathname: urlAfterBasename } as any);
 
   // Prepare an instance of the application and perform an inital render that will
+  const routerContext: StaticRouterContext = { url: undefined };
+  
   const app = (
     <Provider store={store}>
       <StaticRouter basename={basename} context={routerContext} location={params.location.path}>

@@ -23,7 +23,7 @@
   ],
   "proxy": "https://localhost:5001",
   "devDependencies": {
-    "@banbrick/redux-creator": "^1.0.6",
+    "@banbrick/redux-creator": "^1.0.8",
     "@types/classnames": "2.2.6",
     "@types/history": "4.7.0",
     "@types/node": "10.5.7",

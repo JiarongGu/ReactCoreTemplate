@@ -23,7 +23,7 @@
   ],
   "proxy": "https://localhost:5001",
   "devDependencies": {
-    "@banbrick/redux-creator": "^1.0.8",
+    "@banbrick/redux-creator": "^1.1.8",
     "@types/classnames": "2.2.6",
     "@types/history": "4.7.0",
     "@types/node": "10.5.7",
@@ -40,7 +40,7 @@
     "react-app-rewire-aliases": "^0.2.0",
     "react-app-rewired": "^2.1.0",
     "react-hot-loader": "^4.6.5",
-    "react-scripts": "^2.1.5",
+    "react-scripts": "^2.1.8",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.12.1",
     "typed-scss-modules": "0.0.6",

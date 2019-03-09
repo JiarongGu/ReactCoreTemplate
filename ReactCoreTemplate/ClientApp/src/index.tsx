@@ -54,7 +54,7 @@ export const App = hot(module)(() => (
 ReactDOM.hydrate(
   <Provider store={store}>
     <Router history={history}>
-      <App />
+      <Routes />
     </Router>
   </Provider>,
   document.getElementById('root')

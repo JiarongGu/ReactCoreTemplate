@@ -2,55 +2,60 @@ import * as React from 'react';
 import { connect } from '@banbrick/redux-creator';
 import { state, service, reducer, effect } from '@banbrick/redux-creator';
 
-@service
-export class IncrementService {
-  @state
-  state = 0;
-
-  @reducer
-  increment() {
-    return this.state + 1;
-  }
-}
-
-@service
+@service('CounterService')
 export class CounterService {
   @state
-  state = 0;
-
-  incrementService = new IncrementService();
+  state = { 
+    increment: 0, 
+    decrement: 0, 
+    total: 0 
+  };
 
   @reducer
-  decrement() {
-    return this.state - 1;
+  increment(value: number) {
+    const increment = this.state.increment + value;
+    const total = this.state.total + value;
+    return { ...this.state, increment, total };
+  }
+
+  @reducer
+  decrement(value: number) {
+    const decrement = this.state.decrement - value;
+    const total = this.state.total - value;
+    return { ...this.state, decrement, total };
   }
 
   @effect
-  updateAll() {
-    this.decrement();
-    this.incrementService.increment();
+  updateAll(value: number) {
+    this.decrement(value);
+    this.increment(value);
   }
 }
 
-@connect(IncrementService, CounterService)
-export default class Counter extends React.Component<any> {
+@connect(CounterService)
+class Counter extends React.Component<{ name: string }> {
+  buttonRef= React.createRef<HTMLButtonElement>();
+  componentDidMount() {
+    console.log(this.buttonRef.current);
+  }
+  
   render() {
-    //const counterService: CounterService = this.props.CounterService;
-    const incrementService: IncrementService = this.props.IncrementService;
-    const counterService: CounterService = this.props.CounterService;
-
+    const counterService: CounterService = (this.props as any).CounterService;
     return (
       <div>
-        <h1>Counter</h1>
+        <h1>Counter {this.props.name}</h1>
         <p>This is a simple example of a React component.</p>
-        <p>Current Increment: <strong>{incrementService.state}</strong></p>
-        <p>Current Decrement: <strong>{counterService.state}</strong></p>
-        <button onClick={incrementService.increment}>Increment</button>
-        <button onClick={counterService.decrement}>Decrement</button>
-        <button onClick={counterService.updateAll}>Update All</button>
+        <p>Current Increment: <strong>{counterService.state.increment}</strong></p>
+        <p>Current Decrement: <strong>{counterService.state.decrement}</strong></p>
+        <p>Current Total: <strong>{counterService.state.total}</strong></p>
+        <button onClick={() => counterService.increment(2)}>Increment</button>
+        <button onClick={() => counterService.decrement(2)}>Decrement</button>
+        <button ref={this.buttonRef} onClick={() => counterService.updateAll(1)}>Update All</button>
       </div>
     )
   }
 }
 
-const Test = () => <Counter />
+const Test = () => <Counter name={'new counter hahaha'} />
+
+export default Test;

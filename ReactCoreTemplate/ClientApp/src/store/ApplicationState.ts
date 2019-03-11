@@ -1,6 +1,5 @@
-import { AppInfoState, HttpConfigState } from '../services';
+import { AppInfoState } from '../services';
 
 export interface ApplicationState {
   appInfo: AppInfoState;
-  httpConfig: HttpConfigState;
 }

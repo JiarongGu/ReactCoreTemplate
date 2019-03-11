@@ -1,27 +1,28 @@
 
 const path = require('path');
 const { paths } = require('react-app-rewired');
-const rewireAliases = require('react-app-rewire-aliases');
-const { addBabelPlugin } = require('customize-cra');
+const { addBabelPlugin, addWebpackAlias } = require('customize-cra');
 const webpack = require('webpack');
 
 const isServer = process.argv.indexOf('--server') > 0;
 
 module.exports = {
   webpack: function(config, env) {
-    config = rewireAliases.aliasesOptions({
+    config = addWebpackAlias({
       '@store': path.resolve(__dirname, `${paths.appSrc}/store/`),
       '@components': path.resolve(__dirname, `${paths.appSrc}/components`),
       '@services': path.resolve(__dirname, `${paths.appSrc}/services`),
       '@utils': path.resolve(__dirname, `${paths.appSrc}/utils`)
-    })(config, env);
+    })(config);
     
-    config = addBabelPlugin(["@babel/plugin-proposal-decorators", { "legacy": true }])(config);
+    config = addBabelPlugin(
+      ["@babel/plugin-proposal-decorators", { "legacy": true }
+    ])(config);
     
     // used for server-side bundle
-    if(isServer) {
+    if(isServer)
       config = getServerConfig(config);
-    }
+    
     return config;
   },
 }

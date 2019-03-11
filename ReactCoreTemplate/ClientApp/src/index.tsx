@@ -8,7 +8,6 @@ import { Routes } from './components';
 import { ApplicationState } from './store';
 import '@services';
 import { configureStore } from '@banbrick/redux-creator';
-import { loadableReady } from 'react-loadable';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }
@@ -26,8 +25,7 @@ const locationChangeAction = 'LOCATION_CHANGE';
 
 const locationMiddleware = {
   actionType: locationChangeAction,
-  initalLocation: history.location,
-  reload: true
+  initalLocation: history.location
 };
 
 const store = configureStore<ApplicationState>({

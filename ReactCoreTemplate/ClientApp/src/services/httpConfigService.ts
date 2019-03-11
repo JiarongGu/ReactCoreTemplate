@@ -1,10 +1,10 @@
 import { AxiosRequestConfig } from 'axios';
-import { ReduxCreator } from '@banbrick/redux-creator';
 
-export class HttpConfigState {
-  config?: AxiosRequestConfig
+class HttpConfigService {
+  private _config?: AxiosRequestConfig; 
+
+  get config(){ return this._config }
+  set config(config){ this._config = config }
 }
 
-export const httpConfigActions = new ReduxCreator('httpConfig', new HttpConfigState())
-  .addReducer<AxiosRequestConfig | undefined>((state, config) => ({ ...state, config }), 'setHttpConfig')
-  .build();
+export const httpConfigService = new HttpConfigService();

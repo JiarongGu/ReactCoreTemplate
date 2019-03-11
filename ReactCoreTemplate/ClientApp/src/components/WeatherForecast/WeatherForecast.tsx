@@ -1,30 +1,24 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { WatherForecastState } from './watherForecastServices';
-import { connect } from '@utils';
+import { connect } from '@banbrick/redux-creator';
+import { WatherForecastService } from './watherForecastServices';
 import styles from './watherForecast.module.scss';
-import './watherForecastServices';
 
-@connect(
-  (state: { watherForecast: WatherForecastState }) => (
-    { 
-      forecasts: state.watherForecast.forecasts,
-      loading: state.watherForecast.loading
-    }
-  )
-)
-export default class WeatherForecast extends React.Component<any> {
+@connect(WatherForecastService)
+export default class WeatherForecast extends React.PureComponent<any> {
   render() {
-    const { forecasts, loading, match: { params: { startDateIndex } } } = this.props;
-    const prevStartDateIndex = parseInt(startDateIndex || 0) - 5;
-    const nextStartDateIndex = parseInt(startDateIndex || 0) + 5;
+    const watherForecast = this.props.watherForecast as WatherForecastService;
+    const loadedForecast = !watherForecast.state.loading && watherForecast.state.forecasts;
+    
+    console.log(watherForecast.state);
+
     
     return (
       <div className={styles.container}>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {!!loading && <p>loading forecasts...</p> }
-        {!loading && forecasts &&
+        {!loadedForecast && <p>loading forecasts...</p> }
+        {loadedForecast &&
           <table className='table'>
             <thead>
               <tr>
@@ -35,7 +29,7 @@ export default class WeatherForecast extends React.Component<any> {
               </tr>
             </thead>
             <tbody>
-              {forecasts.map(forecast =>
+              {watherForecast.state.forecasts.map(forecast =>
                 <tr key={forecast.dateFormatted}>
                   <td>{forecast.dateFormatted}</td>
                   <td>{forecast.temperatureC}</td>
@@ -46,8 +40,8 @@ export default class WeatherForecast extends React.Component<any> {
             </tbody>
           </table>
         }
-        <p><Link to={`/weather-forecast/${prevStartDateIndex}`}>Previous</Link></p>
-        <p><Link to={`/weather-forecast/${nextStartDateIndex}`}>Next</Link></p>
+        <p><Link to={`/weather-forecast/${watherForecast.state.index - 5}`}>Previous</Link></p>
+        <p><Link to={`/weather-forecast/${watherForecast.state.index + 5}`}>Next</Link></p>
       </div>
     );
   }

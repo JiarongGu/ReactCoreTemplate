@@ -12,7 +12,7 @@ import { configureStore, processLocationTasks, getEffectTasks } from '@banbrick/
 
 import '@services';
 import '@components';
-import { AppInfoState, httpConfigActions } from './services';
+import { AppInfoState, httpConfigService } from './services';
 import { ApplicationState } from './store';
 import { Routes } from './components';
 
@@ -34,13 +34,10 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   const store = configureStore<ApplicationState>({ initalState });
 
   // dispatch new http config
-  store.dispatch(httpConfigActions.setHttpConfig(config));
+  httpConfigService.config = config;
 
   // load all chunk components
   await Loadable.preloadAll();
-
-  // process location tasks
-  await processLocationTasks(store, { pathname: urlAfterBasename } as any);
 
   // Prepare an instance of the application and perform an inital render that will
   const routerContext: StaticRouterContext = { url: undefined };
@@ -53,6 +50,9 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
     </Provider>
   );
 
+  // process location tasks
+  await processLocationTasks(store, { pathname: urlAfterBasename } as any);
+  
   // ensure all effect task completed
   await Promise.all(getEffectTasks());
 
@@ -73,9 +73,6 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
     `${header.script.toString()}\n` +
     `${header.noscript.toString()}`;
   const state = store.getState();
-
-  // delete httpconfig which be using differently in client
-  delete (state.httpConfig);
 
   return ({
     html: originalHtml

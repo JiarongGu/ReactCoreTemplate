@@ -1,46 +1,47 @@
-import { matchPath } from 'react-router';
-import { WeatherForecastSource } from './WatherForecastSource';
-import { ApplicationState } from '@store';
-import { MiddlewareAPI } from 'redux';
-import { Location } from 'history';
-import { ReduxCreator } from '@banbrick/redux-creator';
+import { match } from 'react-router';
+import { HttpClient } from '../../services';
+import { service, state, reducer, effect, location } from '@banbrick/redux-creator';
+import { httpConfigService } from '@services';
 
 export class WatherForecastState {
   forecasts: any[] = [];
   loading: boolean = false;
+  index: number = 0;
 }
 
-// create reducer actions
-const actionAccessor = 
-  new ReduxCreator<WatherForecastState>('watherForecast', new WatherForecastState())
-    .addAccessor()
-    .build()[0];
+@service('watherForecast')
+export class WatherForecastService {
+  @state
+  state = new WatherForecastState();
 
-// create load effect
-const loadWeatherForecast = async (store: MiddlewareAPI<any, ApplicationState>, startDateIndex: number) => {
-  const httpConfig = store.getState().httpConfig.config;
-  const dataSource = new WeatherForecastSource(httpConfig);
-  store.dispatch(actionAccessor.loading(true));
-  const forecasts = await dataSource.fetchdata(startDateIndex);
-  store.dispatch(actionAccessor.loading(false));
-  store.dispatch(actionAccessor.forecasts(forecasts));
-}
-
-const effectActions = 
-  new ReduxCreator<WatherForecastState>()
-    .addEffectHandler(loadWeatherForecast, 'loadWeatherForecast')
-    .build();
-
-// add location handler
-const locationHanlder = async (store: MiddlewareAPI<any, ApplicationState>, location: Location) => {
-  var matches = matchPath(location.pathname,  { path: '/weather-forecast/:startDateIndex?'});
-  if (matches) {
-    const startDateIndex = (matches.params as any).startDateIndex;
-    // dispatch effect
-    store.dispatch(effectActions.loadWeatherForecast(startDateIndex));
+  @reducer
+  setForecasts(forecasts: Array<any>, index: number) {
+    console.log(this.state);
+    return { ...this.state, forecasts, index };
   }
-};
 
-new ReduxCreator<WatherForecastState>()
-  .addLocationHandler(locationHanlder)
-  .build();
+  @reducer
+  setLoading(loading: boolean) {
+    return { ...this.state, loading };
+  }
+
+  async loadingPipe(action: Promise<any>) {
+    this.setLoading(true);
+    const result = await action;
+    this.setLoading(false);
+    return result;
+  }
+
+  @effect
+  async loadWeatherForecast(index: number) {
+    const httpClient = new HttpClient(httpConfigService.config);
+    const forecasts = await this.loadingPipe(httpClient.get(`/api/SampleData/WeatherForecasts?startDateIndex=${index}`));
+    this.setForecasts(forecasts.data, index)
+  }
+
+  @location('/weather-forecast/:index?', true)
+  async loadOnWeatherUrl(matches: match<{ index?: string}>) {
+    const index = parseInt(matches.params.index || '') || 0;
+    await this.loadWeatherForecast(index);
+  }
+}

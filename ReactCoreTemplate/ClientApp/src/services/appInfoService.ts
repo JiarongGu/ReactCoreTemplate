@@ -1,4 +1,4 @@
-import { ReduxCreator } from '@banbrick/redux-creator';
+import { service, state, reducer } from '@banbrick/redux-creator';
 
 
 export class AppInfoState {
@@ -11,6 +11,15 @@ export class AppInfoState {
   }
 }
 
-export const appInfoActions = new ReduxCreator('appInfo', new AppInfoState())
-  .addReducer<AppInfoState>((state, appInfo) => ({ ...state, appInfo }), 'setAppInfo')
-  .build();
+@service('appInfoService')
+export class AppInfoService {
+  @state
+  state = new AppInfoState();
+
+  @reducer
+  setAppInfo(logoUrl: string, isClient: boolean) {
+    return { logoUrl, isClient };
+  }
+}
+
+export const appInfoService = new AppInfoService();

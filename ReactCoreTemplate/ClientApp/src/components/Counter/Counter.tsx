@@ -1,15 +1,21 @@
 import * as React from 'react';
 import { connect } from '@banbrick/redux-creator';
 import { CounterService } from './CounterService';
+import { AppInfoService } from '@services';
+import Helmet from 'react-helmet';
 
-@connect(CounterService)
+@connect(CounterService, AppInfoService)
 class Counter extends React.PureComponent<any> {
   render() {
     const counterService: CounterService = this.props.counterService;
-    console.log('counter render');
+    const appInfoService: AppInfoService = this.props.appInfoService;
+
     return (
       <div>
-        <h1>Counter</h1>
+        <Helmet>
+          <title>ReactCoreTemplate - Counter</title>
+        </Helmet>
+        <h1>Counter - {appInfoService.state.isClient ? 'client' : 'server'}</h1>
         <p>Current Increment: <strong>{counterService.state.increment}</strong></p>
         <p>Current Decrement: <strong>{counterService.state.decrement}</strong></p>
         <p>Current Total: <strong>{counterService.state.total}</strong></p>

@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
-import { configureStore, processLocationTasks, getEffectTasks } from '@banbrick/redux-creator';
+import { configureCreatorStore, processLocationTasks, getEffectTasks } from '@banbrick/redux-creator';
 
 
 import '@services';
@@ -29,9 +29,9 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   // Parpare store
   const httpsAgent = new https.Agent({ rejectUnauthorized: false });
   const config = { baseURL: host, httpsAgent };
-  const initalState: any = { appInfo: new AppInfoState(false) };
+  const preloadedState: any = { appInfo: new AppInfoState(false) };
 
-  const store = configureStore<ApplicationState>({ initalState });
+  const store = configureCreatorStore<ApplicationState>({ preloadedState });
 
   // dispatch new http config
   httpConfigService.config = config;

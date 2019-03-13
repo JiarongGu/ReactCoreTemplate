@@ -7,6 +7,7 @@ export class WatherForecastState {
   forecasts: any[] = [];
   loading: boolean = false;
   index: number = 0;
+  error?: Error;
 }
 
 @service('watherForecast')
@@ -16,7 +17,6 @@ export class WatherForecastService {
 
   @reducer
   setForecasts(forecasts: Array<any>, index: number) {
-    console.log(this.state);
     return { ...this.state, forecasts, index };
   }
 
@@ -27,16 +27,23 @@ export class WatherForecastService {
 
   async loadingPipe(action: Promise<any>) {
     this.setLoading(true);
-    const result = await action;
-    this.setLoading(false);
-    return result;
+    this.state.error = undefined;
+    
+    try {
+      return await action
+    } catch(e) {
+      this.state.error = e;
+    }
+    finally {
+      this.setLoading(false);
+    }
   }
 
   @effect
   async loadWeatherForecast(index: number) {
     const httpClient = new HttpClient(httpConfigService.config);
     const forecasts = await this.loadingPipe(httpClient.get(`/api/SampleData/WeatherForecasts?startDateIndex=${index}`));
-    this.setForecasts(forecasts.data, index)
+    this.setForecasts(forecasts && forecasts.data, index)
   }
 
   @location('/weather-forecast/:index?', true)

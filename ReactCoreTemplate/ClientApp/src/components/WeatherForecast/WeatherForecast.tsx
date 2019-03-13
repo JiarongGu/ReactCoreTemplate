@@ -8,16 +8,19 @@ import styles from './watherForecast.module.scss';
 export default class WeatherForecast extends React.PureComponent<any> {
   render() {
     const watherForecast = this.props.watherForecast as WatherForecastService;
-    const loadedForecast = !watherForecast.state.loading && watherForecast.state.forecasts;
-    
+    const loading = watherForecast.state.loading;
+    const loadedForecast = !loading && watherForecast.state.forecasts;
+    const error = watherForecast.state.error;
+
     console.log(watherForecast.state);
 
-    
+
     return (
       <div className={styles.container}>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {!loadedForecast && <p>loading forecasts...</p> }
+        {loading && <p>loading forecasts...</p>}
+        {error && <p>{error.message}</p>}
         {loadedForecast &&
           <table className='table'>
             <thead>

@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from '@banbrick/redux-creator';
-import { WatherForecastService } from './watherForecastServices';
+import { sinking } from 'redux-sink';
+import { WatherForecastSink } from './watherForecastSink';
 import styles from './watherForecast.module.scss';
 
-@connect(WatherForecastService)
+@sinking(WatherForecastSink)
 export default class WeatherForecast extends React.PureComponent<any> {
   render() {
-    const watherForecast = this.props.watherForecast as WatherForecastService;
+    const watherForecast = this.props.watherForecast as WatherForecastSink;
     const loading = watherForecast.state.loading;
     const loadedForecast = !loading && watherForecast.state.forecasts;
     const error = watherForecast.state.error;
-
-    console.log(watherForecast.state);
-
 
     return (
       <div className={styles.container}>

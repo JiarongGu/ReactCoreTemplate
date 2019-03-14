@@ -7,7 +7,7 @@ import { createBrowserHistory } from 'history';
 import { Routes } from './components';
 import { ApplicationState } from './store';
 import '@services';
-import { configureCreatorStore, processLocationTasks } from '@banbrick/redux-creator';
+import { configureSinkStore, applyRetriggerAction } from 'redux-sink';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }
@@ -21,16 +21,9 @@ delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-
-const store = configureCreatorStore<ApplicationState>({
-  preloadedState,
-  history,
-  devTool: true,
-});
-
-// fire location tasks when there is no inital state
-if (!preloadedState)
-  processLocationTasks(store, history.location);
+const store = configureSinkStore<ApplicationState>({ preloadedState, devTool: true });
+history.listen(location => store.dispatch({ type: 'location_change', payload: location }));
+applyRetriggerAction('location_change', history.location);
 
 // hot app module
 export const App = hot(module)(() => (

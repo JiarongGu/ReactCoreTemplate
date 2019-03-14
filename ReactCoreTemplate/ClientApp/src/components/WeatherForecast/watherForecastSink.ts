@@ -1,7 +1,8 @@
 import { match } from 'react-router';
 import { HttpClient } from '../../services';
-import { service, state, reducer, effect, location } from '@banbrick/redux-creator';
+import { sink, state, reducer, effect, trigger } from 'redux-sink';
 import { httpConfigService } from '@services';
+import { location } from '@decorators';
 
 export class WatherForecastState {
   forecasts: any[] = [];
@@ -10,8 +11,8 @@ export class WatherForecastState {
   error?: Error;
 }
 
-@service('watherForecast')
-export class WatherForecastService {
+@sink('watherForecast')
+export class WatherForecastSink {
   @state
   state = new WatherForecastState();
 
@@ -46,7 +47,8 @@ export class WatherForecastService {
     this.setForecasts(forecasts && forecasts.data, index)
   }
 
-  @location('/weather-forecast/:index?', true)
+  @trigger('location_change')
+  @location('/weather-forecast/:index?')
   async loadOnWeatherUrl(matches: match<{ index?: string}>) {
     const index = parseInt(matches.params.index || '') || 0;
     await this.loadWeatherForecast(index);

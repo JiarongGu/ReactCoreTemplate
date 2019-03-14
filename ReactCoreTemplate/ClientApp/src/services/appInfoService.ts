@@ -1,4 +1,4 @@
-import { service, state, reducer } from '@banbrick/redux-creator';
+import { sink, state, reducer } from 'redux-sink';
 
 
 export class AppInfoState {
@@ -11,7 +11,7 @@ export class AppInfoState {
   }
 }
 
-@service('appInfoService')
+@sink('appInfoService')
 export class AppInfoService {
   @state
   state = new AppInfoState();

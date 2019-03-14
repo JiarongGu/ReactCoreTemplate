@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
-import { configureCreatorStore, processLocationTasks, getEffectTasks } from '@banbrick/redux-creator';
+import { configureSinkStore, runTriggerEvents, getEffectTasks } from 'redux-sink';
 
 
 import '@services';
@@ -31,7 +31,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   const config = { baseURL: host, httpsAgent };
   const preloadedState: any = { appInfo: new AppInfoState(false) };
 
-  const store = configureCreatorStore<ApplicationState>({ preloadedState });
+  const store = configureSinkStore<ApplicationState>({ preloadedState });
 
   // dispatch new http config
   httpConfigService.config = config;
@@ -51,7 +51,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   );
 
   // process location tasks
-  await processLocationTasks(store, { pathname: urlAfterBasename } as any);
+  await runTriggerEvents({ pathname: urlAfterBasename } as any);
   
   // ensure all effect task completed
   await Promise.all(getEffectTasks());

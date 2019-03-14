@@ -11,7 +11,8 @@ module.exports = {
       '@store': path.resolve(__dirname, `${paths.appSrc}/store/`),
       '@components': path.resolve(__dirname, `${paths.appSrc}/components`),
       '@services': path.resolve(__dirname, `${paths.appSrc}/services`),
-      '@utils': path.resolve(__dirname, `${paths.appSrc}/utils`)
+      '@utils': path.resolve(__dirname, `${paths.appSrc}/utils`),
+      '@decorators': path.resolve(__dirname, `${paths.appSrc}/decorators`)
     })(config);
 
     // used for server-side bundle

@@ -1,8 +1,8 @@
 
 
-import { state, service, reducer, effect } from '@banbrick/redux-creator';
+import { state, sink, reducer, effect } from 'redux-sink';
 
-@service('counterService')
+@sink('counterService')
 export class CounterService {
   @state
   state = { 
@@ -12,17 +12,22 @@ export class CounterService {
   };
 
   @reducer
+  setState(state: any) {
+    return {...state};
+  }
+
+  @effect
   increment(value: number) {
     const increment = this.state.increment + value;
     const total = this.state.total + value;
-    return { ...this.state, increment, total };
+    this.setState({ ...this.state, increment, total });
   }
 
-  @reducer
+  @effect
   decrement(value: number) {
     const decrement = this.state.decrement - value;
     const total = this.state.total - value;
-    return { ...this.state, decrement, total };
+    this.setState({ ...this.state, decrement, total });
   }
 
   @effect

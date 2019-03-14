@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { connect } from '@banbrick/redux-creator';
+import { sinking } from 'redux-sink';
 import { CounterService } from './CounterService';
 import { AppInfoService } from '@services';
 import Helmet from 'react-helmet';
 
-@connect(CounterService, AppInfoService)
+@sinking(CounterService, AppInfoService)
 class Counter extends React.PureComponent<any> {
   render() {
     const counterService: CounterService = this.props.counterService;

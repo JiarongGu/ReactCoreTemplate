@@ -9,7 +9,9 @@
       "@store*": ["./src/store*"],
       "@store": ["./src/store"],
       "@utils*": ["./src/utils*"],
-      "@utils": ["./src/utils"]
+      "@utils": ["./src/utils"],
+      "@decorators*": ["./src/decorators*"],
+      "@decorators": ["./src/decorators"]
     }
   }
 }

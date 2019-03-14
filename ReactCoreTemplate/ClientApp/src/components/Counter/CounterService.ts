@@ -11,6 +11,8 @@ export class CounterService {
     total: 0 
   };
 
+  offset = 0
+
   @reducer
   setState(state: any) {
     return {...state};
@@ -18,15 +20,19 @@ export class CounterService {
 
   @effect
   increment(value: number) {
-    const increment = this.state.increment + value;
-    const total = this.state.total + value;
+    this.offset++;
+    const increase = value + this.offset;
+    const increment = this.state.increment + increase;
+    const total = this.state.total + increase;
     this.setState({ ...this.state, increment, total });
   }
 
   @effect
   decrement(value: number) {
-    const decrement = this.state.decrement - value;
-    const total = this.state.total - value;
+    this.offset--;
+    const decrease = value + this.offset;
+    const decrement = this.state.decrement - decrease;
+    const total = this.state.total - decrease;
     this.setState({ ...this.state, decrement, total });
   }
 

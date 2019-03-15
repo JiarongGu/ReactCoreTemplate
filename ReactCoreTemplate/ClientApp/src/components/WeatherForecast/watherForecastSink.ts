@@ -1,8 +1,8 @@
 import { match } from 'react-router';
 import { HttpClient } from '../../services';
-import { sink, state, reducer, effect, trigger } from 'redux-sink';
+import { sink, state, reducer, effect, trigger, retrigger } from 'redux-sink';
 import { httpConfigService } from '@services';
-import { location } from '@decorators';
+import { location, debounced } from '@decorators';
 
 export class WatherForecastState {
   forecasts: any[] = [];
@@ -17,8 +17,14 @@ export class WatherForecastSink {
   state = new WatherForecastState();
 
   @reducer
-  setForecasts(forecasts: Array<any>, index: number) {
-    return { ...this.state, forecasts, index };
+  setIndex(index: number) {
+    console.log(index, this.state.index);
+    return { ...this.state, index };
+  }
+
+  @reducer
+  setForecasts(forecasts: Array<any>) {
+    return { ...this.state, forecasts };
   }
 
   @reducer
@@ -29,7 +35,6 @@ export class WatherForecastSink {
   async loadingPipe(action: Promise<any>) {
     this.setLoading(true);
     this.state.error = undefined;
-    
     try {
       return await action
     } catch(e) {
@@ -41,16 +46,21 @@ export class WatherForecastSink {
   }
 
   @effect
+  @debounced(300)
   async loadWeatherForecast(index: number) {
     const httpClient = new HttpClient(httpConfigService.config);
-    const forecasts = await this.loadingPipe(httpClient.get(`/api/SampleData/WeatherForecasts?startDateIndex=${index}`));
-    this.setForecasts(forecasts && forecasts.data, index)
+    const forecasts = await this.loadingPipe(
+      httpClient.get(`/api/SampleData/WeatherForecasts?startDateIndex=${index}`)
+    );
+    this.setForecasts(forecasts && forecasts.data)
   }
+
 
   @trigger('location_change')
   @location('/weather-forecast/:index?')
   async loadOnWeatherUrl(matches: match<{ index?: string}>) {
     const index = parseInt(matches.params.index || '') || 0;
+    this.setIndex(index);
     await this.loadWeatherForecast(index);
   }
 }

@@ -11,7 +11,6 @@ export default class WeatherForecast extends React.PureComponent<any> {
     const loading = watherForecast.state.loading;
     const loadedForecast = !loading && watherForecast.state.forecasts;
     const error = watherForecast.state.error;
-
     return (
       <div className={styles.container}>
         <h1>Weather forecast</h1>

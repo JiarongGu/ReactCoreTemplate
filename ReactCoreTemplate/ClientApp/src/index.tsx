@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { Routes } from './components';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import { configureSinkStore, registerReloader } from 'redux-sink';
+import { SinkFactory } from 'redux-sink';
 
 declare global {
   interface Window { __PRELOADED_STATE__: any; }
@@ -20,12 +20,12 @@ delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-const store = configureSinkStore({ 
+const store = SinkFactory.createStore({ 
   preloadedState, 
   devtoolOptions: { devToolCompose: composeWithDevTools } 
 });
 history.listen(location => store.dispatch({ type: 'location_change', payload: location }));
-registerReloader('location_change', history.location);
+SinkFactory.addReloader('location_change', history.location);
 
 // hot app module
 export const App = hot(module)(() => (

@@ -7,13 +7,12 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
-import { configureSinkStore, runTriggerEvents, getEffectTasks } from 'redux-sink';
+import { SinkFactory, runTriggerEvents, getEffectTasks } from 'redux-sink';
 
 
 import '@services';
 import '@components';
 import { AppInfoState, httpConfigService } from './services';
-import { ApplicationState } from './store';
 import { Routes } from './components';
 
 export default createServerRenderer(async (params: BootFuncParams): Promise<RenderResult> => {
@@ -31,7 +30,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   const config = { baseURL: host, httpsAgent };
   const preloadedState: any = { appInfo: new AppInfoState(false) };
 
-  const store = configureSinkStore<ApplicationState>({ preloadedState });
+  const store = SinkFactory.createStore({ preloadedState });
 
   // dispatch new http config
   httpConfigService.config = config;

@@ -1,6 +1,6 @@
 import { match } from 'react-router';
 import { HttpClient } from '../../services';
-import { sink, state, reducer, effect, trigger, retrigger } from 'redux-sink';
+import { sink, state, reducer, effect, trigger, reloader } from 'redux-sink';
 import { httpConfigService } from '@services';
 import { location, debounced } from '@decorators';
 
@@ -18,7 +18,6 @@ export class WatherForecastSink {
 
   @reducer
   setIndex(index: number) {
-    console.log(index, this.state.index);
     return { ...this.state, index };
   }
 
@@ -59,6 +58,7 @@ export class WatherForecastSink {
   @trigger('location_change')
   @location('/weather-forecast/:index?')
   async loadOnWeatherUrl(matches: match<{ index?: string}>) {
+    if(!matches) return;
     const index = parseInt(matches.params.index || '') || 0;
     this.setIndex(index);
     await this.loadWeatherForecast(index);

@@ -37,6 +37,12 @@ export class CounterService {
   }
 
   @effect
+  incrementall(values: Array<number>) {
+    const total = this.state.total + values.reduce((a, b) => a + b, 0);
+    this.setState({ ...this.state, total });
+  }
+
+  @effect
   updateAll(value: number) {
     this.decrement(value);
     this.increment(value);

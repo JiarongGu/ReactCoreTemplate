@@ -21,6 +21,7 @@ class Counter extends React.PureComponent<any> {
         <p>Current Total: <strong>{counterService.state.total}</strong></p>
         <button onClick={() => counterService.increment(2)}>Increment</button>
         <button onClick={() => counterService.decrement(2)}>Decrement</button>
+        <button onClick={() => counterService.incrementall([1, 2, 3, 4, 5])}>Increment All</button>
       </div>
     )
   }

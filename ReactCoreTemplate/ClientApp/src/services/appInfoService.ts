@@ -21,5 +21,3 @@ export class AppInfoService {
     return { logoUrl, isClient };
   }
 }
-
-export const appInfoService = new AppInfoService();

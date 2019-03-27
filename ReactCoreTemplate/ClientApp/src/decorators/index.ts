@@ -1,2 +1,2 @@
 export * from './location';
-export * from './debounced';
+export * from './debounce';

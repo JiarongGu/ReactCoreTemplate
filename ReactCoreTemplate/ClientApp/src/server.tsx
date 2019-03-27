@@ -7,7 +7,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
-import { SinkFactory, runTriggerEvents, getEffectTasks } from 'redux-sink';
+import { SinkFactory } from 'redux-sink';
 
 
 import '@services';
@@ -50,10 +50,10 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   );
 
   // process location tasks
-  await runTriggerEvents({ pathname: urlAfterBasename } as any);
+  await SinkFactory.runTriggerEvents({ pathname: urlAfterBasename } as any);
   
   // ensure all effect task completed
-  await Promise.all(getEffectTasks());
+  await Promise.all(SinkFactory.effectTasks);
 
   // load data for current url
   await params.domainTasks;

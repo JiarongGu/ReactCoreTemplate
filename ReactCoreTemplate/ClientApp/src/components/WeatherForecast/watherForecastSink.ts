@@ -2,7 +2,7 @@ import { match } from 'react-router';
 import { HttpClient } from '../../services';
 import { sink, state, reducer, effect, trigger, reloader } from 'redux-sink';
 import { httpConfigService } from '@services';
-import { location, debounced } from '@decorators';
+import { location, debounce } from '@decorators';
 
 export class WatherForecastState {
   forecasts: any[] = [];
@@ -45,7 +45,7 @@ export class WatherForecastSink {
   }
 
   @effect
-  @debounced(300)
+  @debounce(300)
   async loadWeatherForecast(index: number) {
     const httpClient = new HttpClient(httpConfigService.config);
     const forecasts = await this.loadingPipe(

@@ -1,6 +1,6 @@
 import { match } from 'react-router';
 import { HttpClient } from '../../services';
-import { sink, state, reducer, effect, trigger, reloader } from 'redux-sink';
+import { sink, state, reducer, effect, trigger } from 'redux-sink';
 import { httpConfigService } from '@services';
 import { location, debounce } from '@decorators';
 
@@ -55,7 +55,7 @@ export class WatherForecastSink {
   }
 
 
-  @trigger('location_change')
+  @trigger('location_change', { fireOnInit: true })
   @location('/weather-forecast/:index?')
   async loadOnWeatherUrl(matches: match<{ index?: string}>) {
     if(!matches) return;

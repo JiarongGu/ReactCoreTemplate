@@ -1,6 +1,7 @@
 
 
 import { state, sink, reducer, effect } from 'redux-sink';
+import { AppInfoService } from '@services';
 
 @sink('counterService')
 export class CounterService {
@@ -12,7 +13,8 @@ export class CounterService {
   };
 
   offset = 0
-
+  appInfo = new AppInfoService();
+  
   @reducer
   setState(state: any) {
     return {...state};

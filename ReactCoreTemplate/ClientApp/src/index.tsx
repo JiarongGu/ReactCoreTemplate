@@ -24,8 +24,12 @@ const store = SinkFactory.createStore({
   preloadedState, 
   devtoolOptions: { devToolCompose: composeWithDevTools } 
 });
-history.listen(location => store.dispatch({ type: 'location_change', payload: location }));
-SinkFactory.addReloader('location_change', history.location);
+
+const locationChange = (location) => store.dispatch({ type: 'location_change', payload: location });
+history.listen(locationChange);
+
+if (!preloadedState)
+  locationChange(history.location);
 
 // hot app module
 export const App = hot(module)(() => (

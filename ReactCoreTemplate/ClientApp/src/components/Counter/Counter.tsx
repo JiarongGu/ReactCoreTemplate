@@ -9,7 +9,6 @@ class Counter extends React.PureComponent<any> {
   render() {
     const counterService: CounterService = this.props.counterService;
     const appInfoService: AppInfoService = this.props.appInfoService;
-
     return (
       <div>
         <Helmet>

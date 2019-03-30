@@ -1,16 +1,16 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { sinking } from 'redux-sink';
-import { WatherForecastSink } from './watherForecastSink';
-import styles from './watherForecast.module.scss';
+import { WeatherForecastSink } from './WeatherForecastSink';
+import styles from './weatherForecast.module.scss';
 
-@sinking(WatherForecastSink)
+@sinking(WeatherForecastSink)
 export default class WeatherForecast extends React.PureComponent<any> {
   render() {
-    const watherForecast = this.props.watherForecast as WatherForecastSink;
-    const loading = watherForecast.state.loading;
-    const loadedForecast = !loading && watherForecast.state.forecasts;
-    const error = watherForecast.state.error;
+    const weatherForecastSink = this.props.weatherForecastSink as WeatherForecastSink;
+    const loading = weatherForecastSink.state.loading;
+    const loadedForecast = !loading && weatherForecastSink.state.forecasts;
+    const error = weatherForecastSink.state.error;
     return (
       <div className={styles.container}>
         <h1>Weather forecast</h1>
@@ -28,7 +28,7 @@ export default class WeatherForecast extends React.PureComponent<any> {
               </tr>
             </thead>
             <tbody>
-              {watherForecast.state.forecasts.map(forecast =>
+              {weatherForecastSink.state.forecasts.map(forecast =>
                 <tr key={forecast.dateFormatted}>
                   <td>{forecast.dateFormatted}</td>
                   <td>{forecast.temperatureC}</td>
@@ -39,8 +39,8 @@ export default class WeatherForecast extends React.PureComponent<any> {
             </tbody>
           </table>
         }
-        <p><Link to={`/weather-forecast/${watherForecast.state.index - 5}`}>Previous</Link></p>
-        <p><Link to={`/weather-forecast/${watherForecast.state.index + 5}`}>Next</Link></p>
+        <p><Link to={`/weather-forecast/${weatherForecastSink.state.index - 5}`}>Previous</Link></p>
+        <p><Link to={`/weather-forecast/${weatherForecastSink.state.index + 5}`}>Next</Link></p>
       </div>
     );
   }

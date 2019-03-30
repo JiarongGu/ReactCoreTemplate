@@ -6,6 +6,7 @@ import { Provider } from 'react-redux';
 import { createBrowserHistory } from 'history';
 import { Routes } from './components';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import { connectRouter, ConnectedRouter, routerMiddleware } from 'connected-react-router'
 import { SinkFactory } from 'redux-sink';
 
 declare global {
@@ -20,16 +21,18 @@ delete window.__PRELOADED_STATE__;
 
 // prepare store
 const history = createBrowserHistory();
-const store = SinkFactory.createStore({ 
-  preloadedState, 
-  devtoolOptions: { devToolCompose: composeWithDevTools } 
+const store = SinkFactory.createStore({
+  reducers: { router: connectRouter(history) },
+  middlewares: [ routerMiddleware(history) ],
+  preloadedState,
+  devtoolOptions: { devToolCompose: composeWithDevTools }
 });
 
-const locationChange = (location) => store.dispatch({ type: 'location_change', payload: location });
-history.listen(locationChange);
+// const locationChange = (location) => store.dispatch({ type: 'location_change', payload: location });
+// history.listen(locationChange);
 
-if (!preloadedState)
-  locationChange(history.location);
+// if (!preloadedState)
+//   locationChange(history.location);
 
 // hot app module
 export const App = hot(module)(() => (
@@ -39,9 +42,9 @@ export const App = hot(module)(() => (
 // initalize default state with requests, then render dom
 ReactDOM.hydrate(
   <Provider store={store}>
-    <Router history={history}>
+    <ConnectedRouter history={history}>
       <Routes />
-    </Router>
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );

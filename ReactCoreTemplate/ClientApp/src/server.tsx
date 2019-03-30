@@ -8,10 +8,6 @@ import { StaticRouter } from 'react-router-dom';
 import { StaticRouterContext } from 'react-router';
 import { createServerRenderer, RenderResult, BootFuncParams } from 'aspnet-prerendering';
 import { SinkFactory } from 'redux-sink';
-
-
-import '@services';
-import '@components';
 import { AppInfoState, httpConfigService } from './services';
 import { Routes } from './components';
 
@@ -28,7 +24,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   // Parpare store
   const httpsAgent = new https.Agent({ rejectUnauthorized: false });
   const config = { baseURL: host, httpsAgent };
-  const preloadedState: any = { appInfo: new AppInfoState(false) };
+  const preloadedState: any = { appInfoService: new AppInfoState(false) };
 
   const store = SinkFactory.createStore({ preloadedState });
 
@@ -40,7 +36,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
 
   // Prepare an instance of the application and perform an inital render that will
   const routerContext: StaticRouterContext = { url: undefined };
-  
+
   const app = (
     <Provider store={store}>
       <StaticRouter basename={basename} context={routerContext} location={params.location.path}>
@@ -49,9 +45,14 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
     </Provider>
   );
 
+  const locationAction = {
+    type: '@@router/LOCATION_CHANGE',
+    payload: { location: { pathname: urlAfterBasename } }
+  };
+
   // process location tasks
-  await SinkFactory.runTriggerEvents({ pathname: urlAfterBasename } as any);
-  
+  await SinkFactory.runTriggerEvents(locationAction);
+
   // ensure all effect task completed
   await Promise.all(SinkFactory.effectTasks);
 

@@ -1,6 +1,6 @@
 
 
-import { state, sink, reducer, effect } from 'redux-sink';
+import { state, sink, reducer, effect, trigger } from 'redux-sink';
 import { AppInfoService } from '@services';
 
 @sink('counterService')
@@ -9,7 +9,8 @@ export class CounterService {
   state = { 
     increment: 0, 
     decrement: 0, 
-    total: 0 
+    total: 0,
+    actions: 0
   };
 
   offset = 0
@@ -45,8 +46,18 @@ export class CounterService {
   }
 
   @effect
-  updateAll(value: number) {
-    this.decrement(value);
-    this.increment(value);
+  updateAll(increment: number, decrement: number) {
+    this.decrement(decrement);
+    this.increment(increment);
+  }
+
+  @trigger('counterService/incrementall')
+  @trigger('counterService/decrement')
+  @trigger('counterService/increment')
+  @trigger('counterService/updateAll')
+  actionCounter(first: number, second: number) {
+    console.log(first, second);
+    const actions = this.state.actions + 1;
+    this.setState({ ...this.state, actions });
   }
 }

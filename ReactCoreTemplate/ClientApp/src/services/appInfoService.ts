@@ -1,4 +1,4 @@
-import { sink, state, reducer } from 'redux-sink';
+import { sink, state } from 'redux-sink';
 
 
 export class AppInfoState {
@@ -15,9 +15,4 @@ export class AppInfoState {
 export class AppInfoService {
   @state
   state = new AppInfoState();
-
-  @reducer
-  setAppInfo(logoUrl: string, isClient: boolean) {
-    return { logoUrl, isClient };
-  }
 }

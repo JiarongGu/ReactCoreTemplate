@@ -15,10 +15,10 @@ class Counter extends React.PureComponent<any> {
           <title>ReactCoreTemplate - Counter</title>
         </Helmet>
         <h1>Counter - {appInfoService.state.isClient ? 'client' : 'server'}</h1>
-        <p>Current Increment: <strong>{counterService.state.increment}</strong></p>
-        <p>Current Decrement: <strong>{counterService.state.decrement}</strong></p>
-        <p>Current Total: <strong>{counterService.state.total}</strong></p>
-        <p>Current Action Calls: <strong>{counterService.state.actions}</strong></p>
+        <p>Current Increment: <strong>{counterService.incrementCount}</strong></p>
+        <p>Current Decrement: <strong>{counterService.decrementCount}</strong></p>
+        <p>Current Total: <strong>{counterService.total}</strong></p>
+        <p>Current Action Calls: <strong>{counterService.actions}</strong></p>
         <button onClick={() => counterService.increment(2)}>Increment</button>
         <button onClick={() => counterService.decrement(2)}>Decrement</button>
         <button onClick={() => counterService.updateAll(2, 2)}>Update All</button>

@@ -2,22 +2,18 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { sinking } from 'redux-sink';
 import { WeatherForecastSink } from './WeatherForecastSink';
-import styles from './weatherForecast.module.scss';
 
 @sinking(WeatherForecastSink)
 export default class WeatherForecast extends React.PureComponent<any> {
   render() {
-    const weatherForecastSink = this.props.weatherForecastSink as WeatherForecastSink;
-    const loading = weatherForecastSink.state.loading;
-    const loadedForecast = !loading && weatherForecastSink.state.forecasts;
-    const error = weatherForecastSink.state.error;
+    const weatherForecast = this.props.weatherForecastSink as WeatherForecastSink;
     return (
-      <div className={styles.container}>
+      <div>
         <h1>Weather forecast</h1>
         <p>This component demonstrates fetching data from the server and working with URL parameters.</p>
-        {loading && <p>loading forecasts...</p>}
-        {error && <p>{error.message}</p>}
-        {loadedForecast &&
+        {weatherForecast.loading && <p>loading forecasts...</p>}
+        {weatherForecast.error && <p>{weatherForecast.error.message}</p>}
+        {weatherForecast.forecasts &&
           <table className='table'>
             <thead>
               <tr>
@@ -28,7 +24,7 @@ export default class WeatherForecast extends React.PureComponent<any> {
               </tr>
             </thead>
             <tbody>
-              {weatherForecastSink.state.forecasts.map(forecast =>
+              {weatherForecast.forecasts.map(forecast =>
                 <tr key={forecast.dateFormatted}>
                   <td>{forecast.dateFormatted}</td>
                   <td>{forecast.temperatureC}</td>
@@ -39,8 +35,8 @@ export default class WeatherForecast extends React.PureComponent<any> {
             </tbody>
           </table>
         }
-        <p><Link to={`/weather-forecast/${weatherForecastSink.state.index - 5}`}>Previous</Link></p>
-        <p><Link to={`/weather-forecast/${weatherForecastSink.state.index + 5}`}>Next</Link></p>
+        <p><Link to={`/weather-forecast/${weatherForecast.index - 5}`}>Previous</Link></p>
+        <p><Link to={`/weather-forecast/${weatherForecast.index + 5}`}>Next</Link></p>
       </div>
     );
   }

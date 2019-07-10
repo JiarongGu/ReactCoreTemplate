@@ -35,7 +35,7 @@ export class WeatherForecastSink {
   @location('/weather-forecast/:index?')
   async loadOnWeatherUrl(matches: match<{ index?: string }>) {
     if (!matches) return;
-    const index = parseInt(matches.params && matches.params.index || '') || 0;
+    const index = parseInt((matches.params && matches.params.index) || '') || 0;
     this.index = index;
 
     const httpClient = new HttpClient(httpConfigService.config);

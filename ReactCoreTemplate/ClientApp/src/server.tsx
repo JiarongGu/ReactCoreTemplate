@@ -51,7 +51,7 @@ export default createServerRenderer(async (params: BootFuncParams): Promise<Rend
   };
 
   // process location tasks
-  await SinkFactory.runTriggerEvents(locationAction);
+  await SinkFactory.activeTrigger(locationAction);
 
   // ensure all effect task completed
   await Promise.all(SinkFactory.effectTasks);

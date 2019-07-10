@@ -22,16 +22,16 @@ export class CounterService {
   
   @effect
   increment(value: number) {
-    this.offset++;
     const increase = value + this.offset;
+    this.offset++;
     this.incrementCount = this.incrementCount + increase;
     this.total = this.total + increase;
   }
 
   @effect
   decrement(value: number) {
-    this.offset--;
     const decrease = value + this.offset;
+    this.offset--;
     this.incrementCount = this.incrementCount - decrease;
     this.total = this.total - decrease;
   }

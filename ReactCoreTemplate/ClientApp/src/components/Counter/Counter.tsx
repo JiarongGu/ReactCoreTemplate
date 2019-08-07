@@ -4,8 +4,8 @@ import { CounterService } from './CounterService';
 import { AppInfoService } from '@services';
 
 const Counter = () => {
-  const counterService: CounterService = useSink(CounterService);
-  const appInfoService: AppInfoService = useSink(AppInfoService);
+  const counterService: CounterService = useSink(CounterService)!;
+  const appInfoService: AppInfoService = useSink(AppInfoService)!;
 
   return (
     <div>

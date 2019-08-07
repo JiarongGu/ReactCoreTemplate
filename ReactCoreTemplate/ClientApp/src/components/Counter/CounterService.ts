@@ -3,7 +3,7 @@
 import { state, sink, effect, trigger } from 'redux-sink';
 import { AppInfoService } from '@services';
 
-@sink('counterService')
+@sink('counter')
 export class CounterService {
   @state
   incrementCount = 0;
@@ -47,10 +47,9 @@ export class CounterService {
     this.increment(increment);
   }
 
-  @trigger('counterService/decrement')
-  @trigger('counterService/increment')
-  actionCounter(first: number, second: number) {
-    console.log(first, second);
+  @trigger('counter/decrement')
+  @trigger('counter/increment')
+  actionCounter() {
     this.actions ++;
   }
 }

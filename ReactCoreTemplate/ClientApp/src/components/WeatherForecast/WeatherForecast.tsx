@@ -6,7 +6,7 @@ import { WeatherForecastSink } from './WeatherForecastSink';
 @sinking(WeatherForecastSink)
 export default class WeatherForecast extends React.PureComponent<any> {
   render() {
-    const weatherForecast = this.props.weatherForecastSink as WeatherForecastSink;
+    const weatherForecast = this.props.weatherForecast as WeatherForecastSink;
     return (
       <div>
         <h1>Weather forecast</h1>

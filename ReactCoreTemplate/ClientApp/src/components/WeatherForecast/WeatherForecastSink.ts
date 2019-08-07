@@ -1,22 +1,15 @@
-import { match } from 'react-router';
+import { matchPath } from 'react-router';
 import { HttpClient } from '../../services';
-import { sink, state, trigger } from 'redux-sink';
-import { httpConfigService } from '@services';
-import { location } from '@decorators';
+import { sink, state, trigger, effect } from 'redux-sink';
+import { globals } from '@services';
+import { Location } from 'history';
 
-@sink('weatherForecastSink')
+@sink('weatherForecast')
 export class WeatherForecastSink {
-  @state
-  forecasts: any[] = [];
-
-  @state
-  loading: boolean = false;
-
-  @state
-  index: number = 0;
-
-  @state
-  error?: Error;
+  @state public forecasts: any[] = [];
+  @state public loading: boolean = false;
+  @state public index: number = 0;
+  @state public error?: Error;
 
   async loadingPipe(action: Promise<any>) {
     this.loading = true;
@@ -30,15 +23,20 @@ export class WeatherForecastSink {
       this.loading = false;
     }
   }
-  
-  @trigger('@@router/LOCATION_CHANGE', { fireOnInit: true })
-  @location('/weather-forecast/:index?')
-  async loadOnWeatherUrl(matches: match<{ index?: string }>) {
+
+  @trigger('navigation/location')
+  async loadOnWeatherUrl(location: Location) {
+    const matches = matchPath<{ index?: string }>(location.pathname, '/weather-forecast/:index?');
     if (!matches) return;
+
     const index = parseInt((matches.params && matches.params.index) || '') || 0;
     this.index = index;
+    return this.loadWeather(index);
+  }
 
-    const httpClient = new HttpClient(httpConfigService.config);
+  @effect
+  async loadWeather(index: number) {
+    const httpClient = new HttpClient(globals.axiosConfig);
     const forecasts = await this.loadingPipe(
       httpClient.get(`/api/SampleData/WeatherForecasts?startDateIndex=${index}`)
     );

@@ -34,7 +34,7 @@
     "@types/react-router-dom": "^4.3.0",
     "customize-cra": "^0.2.12",
     "fs-extra": "^7.0.1",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "prettier": "^1.14.2",
     "react-app-rewired": "^2.1.0",
     "react-hot-loader": "^4.6.5",

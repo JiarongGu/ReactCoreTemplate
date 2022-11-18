@@ -38,7 +38,7 @@
     "prettier": "^1.14.2",
     "react-app-rewired": "^2.1.0",
     "react-hot-loader": "^4.6.5",
-    "react-scripts": "^3.0.1",
+    "react-scripts": "^5.0.1",
     "redux-devtools-extension": "^2.13.8",
     "reflect-metadata": "^0.1.12",
     "tslint": "^5.12.1",
